@@ -89,7 +89,7 @@ export interface ConfirmDialogData {
         --mdc-outlined-button-outline-color: var(--color-border-strong);
         color: var(--color-text) !important;
       }
-      .cancel:hover { background: #f3f4f6 !important; }
+      .cancel:hover { background: var(--color-hover) !important; }
       .confirm {
         --mdc-filled-button-container-color: var(--color-primary);
         color: #fff !important;

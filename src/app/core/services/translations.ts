@@ -120,6 +120,9 @@ export const CEVIRILER: Ceviriler = {
     'toast.dismiss': 'Kapat',
 
     'lang.label': 'Dil',
+
+    'theme.toDark': 'Koyu temaya geç',
+    'theme.toLight': 'Açık temaya geç',
   },
   en: {
     'app.title': 'My Library',
@@ -235,5 +238,8 @@ export const CEVIRILER: Ceviriler = {
     'toast.dismiss': 'Dismiss',
 
     'lang.label': 'Language',
+
+    'theme.toDark': 'Switch to dark theme',
+    'theme.toLight': 'Switch to light theme',
   },
 };

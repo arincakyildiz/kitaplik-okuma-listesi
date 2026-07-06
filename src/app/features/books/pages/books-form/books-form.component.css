@@ -5,7 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -23,7 +23,7 @@
   font-weight: 600 !important;
   border-radius: var(--radius-md) !important;
 }
-.back:hover { background: #f3f4f6 !important; }
+.back:hover { background: var(--color-hover) !important; }
 .back .mat-icon { margin-right: 4px; }
 .crumb {
   margin-left: auto;
@@ -161,7 +161,7 @@
   --mdc-outlined-button-outline-color: var(--color-border-strong);
   color: var(--color-text) !important;
 }
-.cancel:hover { background: #f3f4f6 !important; }
+.cancel:hover { background: var(--color-hover) !important; }
 .submit {
   --mdc-filled-button-container-color: var(--color-primary);
   color: #fff !important;

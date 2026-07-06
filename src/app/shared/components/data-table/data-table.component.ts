@@ -86,7 +86,7 @@ type SortDir = 'asc' | 'desc' | null;
       thead th {
         position: sticky;
         top: 0;
-        background: #fbfcfe;
+        background: var(--color-elevated);
         border-bottom: 1px solid var(--color-border);
         padding: var(--space-3) var(--space-4);
         font-size: 12px;
@@ -115,7 +115,7 @@ type SortDir = 'asc' | 'desc' | null;
         vertical-align: middle;
       }
       tbody tr { transition: background 140ms var(--ease); }
-      tbody tr:hover { background: #f9fafb; }
+      tbody tr:hover { background: var(--color-row-hover); }
       tbody tr:last-child td { border-bottom: none; }
     `,
   ],

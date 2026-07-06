@@ -3,7 +3,7 @@
   <header class="navbar">
     <div class="nav-inner">
       <div class="brand">
-        <div class="logo"><span class="material-icons">auto_stories</span></div>
+        <img src="book-reading-list.png" class="brand-logo" alt="Book Library & Reading List" />
         <div class="brand-text">
           <span class="brand-name">{{ 'app.title' | translate }}</span>
           <span class="brand-sub">{{ 'app.subtitle' | translate }}</span>
@@ -11,13 +11,7 @@
       </div>
 
       <div class="nav-actions">
-        <img
-          src="book-reading-list.png"
-          class="nav-logo"
-          alt="Book Library & Reading List"
-          (click)="yeniKitap()"
-          role="button"
-        />
+        <app-theme-toggle />
         <app-language-switcher />
         <button mat-flat-button class="add-btn desktop-only" (click)="yeniKitap()">
           <mat-icon>add</mat-icon>

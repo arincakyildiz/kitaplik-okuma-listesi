@@ -22,6 +22,7 @@ import { BookCardComponent } from '../../components/book-card/book-card.componen
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { LanguageSwitcherComponent } from '../../../../shared/components/language-switcher/language-switcher.component';
+import { ThemeToggleComponent } from '../../../../shared/components/theme-toggle/theme-toggle.component';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { StarRatingComponent } from '../../../../shared/components/star-rating/star-rating.component';
 import {
@@ -52,6 +53,7 @@ const SIRALAMALAR: SiralamaAnahtari[] = [
     EmptyStateComponent,
     LoadingSpinnerComponent,
     LanguageSwitcherComponent,
+    ThemeToggleComponent,
     StatusBadgeComponent,
     StarRatingComponent,
     DataTableComponent,
