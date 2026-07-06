@@ -72,9 +72,14 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
   `,
   styles: [
     `
+      :host {
+        display: block;
+        height: 100%;
+      }
       .card {
         display: flex;
         flex-direction: column;
+        height: 100%;
         background: var(--color-card);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-lg);
