@@ -141,7 +141,7 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 ### Asgari sayılar
 
 - **Component:** 11 (books-list, books-form, book-card, data-table, confirm-dialog, form-field, empty-state, loading-spinner, star-rating, status-badge, language-switcher) — asgari 6 ✓
-- **Service:** 3 (StorageService, I18nService, BooksService) ✓
+- **Service:** 4 (StorageService, I18nService, ThemeService, BooksService) ✓
 - **Model / interface:** 4+ (Kitap, OkumaDurumu, TableColumn, ConfirmDialogData, Dil …) ✓
 - **Route guard:** 1 (unsavedChangesGuard) ✓
 - **Custom validator / pipe / directive:** 2 / 2 / 1 ✓
@@ -162,5 +162,6 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 - Kart **ve** tablo görünümü arasında geçiş
 - Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
 - 1–5 yıldız puanlama
+- **Açık / koyu tema (dark mode)** — navbar'dan geçiş, tercih localStorage'da saklanır
 - Boş durum, "sonuç yok" durumu ve yükleniyor göstergesi
 - Responsive, modern ve minimal arayüz (Angular Material)
