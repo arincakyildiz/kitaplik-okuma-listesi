@@ -97,6 +97,8 @@ export class FormFieldComponent {
     if (errors['min']) return this.i18n.t('valid.min');
     if (errors['max']) return this.i18n.t('valid.max');
     if (errors['number']) return this.i18n.t('valid.min');
+    if (errors['futureDate']) return this.i18n.t('valid.futureDate');
+    if (errors['date']) return this.i18n.t('valid.date');
     return this.i18n.t('valid.required');
   });
 }
