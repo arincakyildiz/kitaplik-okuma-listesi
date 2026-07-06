@@ -6,6 +6,7 @@ import { Kitap } from '../../models/book.model';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { StarRatingComponent } from '../../../../shared/components/star-rating/star-rating.component';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
 
 @Component({
   selector: 'app-book-card',
@@ -17,6 +18,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
     StatusBadgeComponent,
     StarRatingComponent,
     TranslatePipe,
+    TruncatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -51,6 +53,10 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
         <div class="rating-row">
           <app-star-rating [value]="kitap().puan" [showValue]="true" />
         </div>
+
+        @if (kitap().not) {
+          <p class="note">{{ kitap().not | truncate: 90 }}</p>
+        }
       </div>
 
       <div class="actions">
@@ -159,6 +165,15 @@ import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
       }
       .pages .material-icons { font-size: 15px; color: var(--color-text-subtle); }
       .rating-row { display: flex; align-items: center; }
+      .note {
+        margin: 0;
+        font-size: 12.5px;
+        line-height: 1.5;
+        color: var(--color-text-muted);
+        font-style: italic;
+        border-left: 2px solid var(--color-border);
+        padding-left: var(--space-3);
+      }
       .actions {
         display: flex;
         gap: var(--space-2);
