@@ -22,6 +22,7 @@ import { I18nService } from '../../../../core/services/i18n.service';
 import { CanComponentDeactivate } from '../../../../core/guards/unsaved-changes.guard';
 import {
   noWhitespaceValidator,
+  notFutureDateValidator,
   numberRangeValidator,
 } from '../../../../shared/validators/custom-validators';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
@@ -81,8 +82,12 @@ export class BooksFormComponent implements CanComponentDeactivate {
     durum: this.fb.nonNullable.control<OkumaDurumu>('okunacak', [Validators.required]),
     sayfaSayisi: this.fb.control<number | null>(null, [numberRangeValidator(1, 20000)]),
     puan: this.fb.nonNullable.control<number>(0),
+    baslamaTarihi: this.fb.nonNullable.control('', [notFutureDateValidator()]),
     not: this.fb.nonNullable.control(''),
   });
+
+  /** Date input'un max değeri — bugünden ileri seçilemesin. */
+  readonly bugunISO = new Date().toISOString().split('T')[0];
 
   readonly puanEtiketi = computed(() => {
     this.i18n.dil();
@@ -103,6 +108,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
           durum: kitap.durum,
           sayfaSayisi: kitap.sayfaSayisi ?? null,
           puan: kitap.puan ?? 0,
+          baslamaTarihi: kitap.baslamaTarihi ?? '',
           not: kitap.not ?? '',
         });
         this.puan.set(kitap.puan ?? 0);
@@ -129,6 +135,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
   kaydet(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.bildir(this.i18n.t('form.errorSummary'));
       return;
     }
     const v = this.form.getRawValue();
@@ -139,6 +146,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
       durum: v.durum,
       sayfaSayisi: v.sayfaSayisi ?? undefined,
       puan: v.puan || undefined,
+      baslamaTarihi: v.baslamaTarihi || undefined,
       not: v.not.trim() || undefined,
     };
 

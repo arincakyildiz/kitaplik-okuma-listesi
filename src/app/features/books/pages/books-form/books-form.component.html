@@ -91,6 +91,16 @@
           </app-form-field>
         </div>
 
+        <!-- Başlama tarihi -->
+        <app-form-field
+          [label]="'form.startDate' | translate"
+          [control]="form.controls.baslamaTarihi"
+          [optionalLabel]="'form.optional' | translate"
+          [hint]="'form.startDateHint' | translate"
+        >
+          <input class="app-input" type="date" formControlName="baslamaTarihi" [max]="bugunISO" />
+        </app-form-field>
+
         <!-- Not -->
         <app-form-field [label]="'form.notes' | translate" [optionalLabel]="'form.optional' | translate">
           <textarea class="app-input app-textarea" formControlName="not" rows="3" maxlength="500" [placeholder]="'form.notesPlaceholder' | translate"></textarea>

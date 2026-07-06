@@ -31,3 +31,20 @@ export function numberRangeValidator(min: number, max: number): ValidatorFn {
     return null;
   };
 }
+
+/**
+ * Custom validator (3) — tarihin gelecekte olmamasını sağlar.
+ * (Bir kitaba geçmişte başlamış olabilirsin ama gelecekte başlayamazsın.)
+ * Boş değer geçerlidir. Hata: { futureDate: true } veya { date: true }
+ */
+export function notFutureDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const raw = control.value;
+    if (!raw) return null;
+    const secilen = new Date(raw);
+    if (Number.isNaN(secilen.getTime())) return { date: true };
+    const bugunSonu = new Date();
+    bugunSonu.setHours(23, 59, 59, 999);
+    return secilen.getTime() > bugunSonu.getTime() ? { futureDate: true } : null;
+  };
+}

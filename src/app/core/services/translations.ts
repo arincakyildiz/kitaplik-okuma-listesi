@@ -58,6 +58,7 @@ export const CEVIRILER: Ceviriler = {
 
     'card.by': 'Yazar',
     'card.pages': '{count} sayfa',
+    'card.started': 'Başlangıç: {date}',
     'card.edit': 'Düzenle',
     'card.delete': 'Sil',
     'card.unrated': 'Puansız',
@@ -82,6 +83,8 @@ export const CEVIRILER: Ceviriler = {
     'form.pages': 'Sayfa sayısı',
     'form.pagesSuffix': 'sayfa',
     'form.rating': 'Puanın',
+    'form.startDate': 'Başlama tarihi',
+    'form.startDateHint': 'Kitaba ne zaman başladın? Gelecek bir tarih seçilemez.',
     'form.notes': 'Notlar',
     'form.optional': '(isteğe bağlı)',
     'form.notesPlaceholder': 'Düşüncelerini, alıntıları veya hatırlatmaları ekle…',
@@ -96,6 +99,9 @@ export const CEVIRILER: Ceviriler = {
     'valid.min': 'En az 1 olmalı.',
     'valid.max': 'Bu sayı çok büyük görünüyor.',
     'valid.whitespace': 'Yalnızca boşluk olamaz.',
+    'valid.futureDate': 'Gelecek bir tarih seçilemez.',
+    'valid.date': 'Geçerli bir tarih girin.',
+    'form.errorSummary': 'Lütfen işaretli alanları düzeltin.',
 
     'rating.0': 'Puansız',
     'rating.1': 'Kötü',
@@ -176,6 +182,7 @@ export const CEVIRILER: Ceviriler = {
 
     'card.by': 'Author',
     'card.pages': '{count} pages',
+    'card.started': 'Started: {date}',
     'card.edit': 'Edit',
     'card.delete': 'Delete',
     'card.unrated': 'Unrated',
@@ -200,6 +207,8 @@ export const CEVIRILER: Ceviriler = {
     'form.pages': 'Pages',
     'form.pagesSuffix': 'pages',
     'form.rating': 'Your rating',
+    'form.startDate': 'Start date',
+    'form.startDateHint': 'When did you start reading? A future date is not allowed.',
     'form.notes': 'Notes',
     'form.optional': '(optional)',
     'form.notesPlaceholder': 'Add any thoughts, quotes, or reminders…',
@@ -214,6 +223,9 @@ export const CEVIRILER: Ceviriler = {
     'valid.min': 'Must be at least 1.',
     'valid.max': 'That number looks too large.',
     'valid.whitespace': 'Cannot be only whitespace.',
+    'valid.futureDate': 'A future date cannot be selected.',
+    'valid.date': 'Enter a valid date.',
+    'form.errorSummary': 'Please fix the highlighted fields.',
 
     'rating.0': 'Not rated',
     'rating.1': 'Poor',

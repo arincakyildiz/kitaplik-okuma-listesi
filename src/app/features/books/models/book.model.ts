@@ -11,6 +11,7 @@ export interface Kitap {
   sayfaSayisi?: number;
   puan?: number; // 1–5
   not?: string;
+  baslamaTarihi?: string; // ISO tarih (yyyy-mm-dd) — gelecekte olamaz
   eklenmeTarihi: string; // ISO tarih
 }
 

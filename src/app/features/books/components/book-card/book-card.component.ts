@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -15,6 +16,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    DatePipe,
     StatusBadgeComponent,
     StarRatingComponent,
     TranslatePipe,
@@ -53,6 +55,13 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         <div class="rating-row">
           <app-star-rating [value]="kitap().puan" [showValue]="true" />
         </div>
+
+        @if (kitap().baslamaTarihi) {
+          <p class="started">
+            <span class="material-icons">event</span>
+            {{ 'card.started' | translate: { date: (kitap().baslamaTarihi | date: 'dd.MM.yyyy') ?? '' } }}
+          </p>
+        }
 
         @if (kitap().not) {
           <p class="note">{{ kitap().not | truncate: 90 }}</p>
@@ -170,6 +179,16 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
       }
       .pages .material-icons { font-size: 15px; color: var(--color-text-subtle); }
       .rating-row { display: flex; align-items: center; }
+      .started {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--color-text-muted);
+      }
+      .started .material-icons { font-size: 15px; color: var(--color-text-subtle); }
       .note {
         margin: 0;
         font-size: 12.5px;
