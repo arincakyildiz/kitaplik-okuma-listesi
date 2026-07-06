@@ -135,7 +135,7 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
   - `translate` — i18n çevirisi (`shared/pipes/translate.pipe.ts`). Örn. `{{ 'shelf.title' | translate }}`. Neredeyse tüm şablonlarda kullanılır.
   - `truncate` — metin kısaltma (`shared/pipes/truncate.pipe.ts`).
 - **Custom Directive:** `appStatusColor` — okuma durumu rozetini renklendirir (`shared/directives/status-color.directive.ts`). `status-badge` bileşeninde kullanılır.
-- **Custom Validator (2):** `noWhitespaceValidator` ve `numberRangeValidator` (`shared/validators/custom-validators.ts`). Form'da ad/yazar ve sayfa sayısı alanlarında kullanılır.
+- **Custom Validator (3):** `noWhitespaceValidator`, `numberRangeValidator` ve `notFutureDateValidator` (`shared/validators/custom-validators.ts`). Form'da ad/yazar, sayfa sayısı ve başlama tarihi alanlarında kullanılır (başlama tarihi gelecekte olamaz).
 - **Route Guard:** `unsavedChangesGuard` (canDeactivate) — form sayfasında kaydedilmemiş değişiklikle çıkışta onay ister (`core/guards/unsaved-changes.guard.ts`, `books.routes.ts`).
 
 ### Asgari sayılar
@@ -161,7 +161,8 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 - Tam CRUD akışı (ekle / listele / düzenle / sil)
 - Kart **ve** tablo görünümü arasında geçiş
 - Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
-- 1–5 yıldız puanlama
+- 1–5 yıldız puanlama ve **başlama tarihi** (gelecek tarih engellenir)
 - **Açık / koyu tema (dark mode)** — navbar'dan geçiş, tercih localStorage'da saklanır
+- Form doğrulama: alan bazlı hata mesajları + geçersiz gönderimde genel uyarı
 - Boş durum, "sonuç yok" durumu ve yükleniyor göstergesi
 - Responsive, modern ve minimal arayüz (Angular Material)
