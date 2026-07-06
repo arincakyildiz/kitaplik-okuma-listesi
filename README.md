@@ -160,7 +160,7 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 
 - Tam CRUD akışı (ekle / listele / düzenle / sil)
 - Kart **ve** tablo görünümü arasında geçiş
-- Ad / yazar / türe göre arama, duruma göre filtre, çoklu sıralama
+- Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
 - 1–5 yıldız puanlama
 - Boş durum, "sonuç yok" durumu ve yükleniyor göstergesi
 - Responsive, modern ve minimal arayüz (Angular Material)

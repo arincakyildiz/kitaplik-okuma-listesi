@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +15,7 @@ import {
   OKUMA_DURUMLARI,
   OkumaDurumu,
   SiralamaAnahtari,
+  TURLER,
 } from '../../models/book.model';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { BookCardComponent } from '../../components/book-card/book-card.component';
@@ -44,7 +44,6 @@ const SIRALAMALAR: SiralamaAnahtari[] = [
   selector: 'app-books-list',
   standalone: true,
   imports: [
-    FormsModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
@@ -76,10 +75,12 @@ export class BooksListComponent {
   // Görünüm durumu (signals)
   readonly arama = signal('');
   readonly durumFiltresi = signal<DurumFiltresi>('hepsi');
+  readonly turFiltresi = signal<string>('hepsi');
   readonly siralama = signal<SiralamaAnahtari>('yeni');
   readonly gorunum = signal<'kart' | 'tablo'>('kart');
 
   readonly durumlar = OKUMA_DURUMLARI;
+  readonly turler = TURLER;
   readonly siralamalar = SIRALAMALAR;
 
   // --- Sayaçlar ------------------------------------------------------------
@@ -99,10 +100,15 @@ export class BooksListComponent {
     const durum = this.durumFiltresi();
     const sirala = this.siralama();
 
+    const tur = this.turFiltresi();
+
     let liste = this.kitaplar();
 
     if (durum !== 'hepsi') {
       liste = liste.filter((k) => k.durum === durum);
+    }
+    if (tur !== 'hepsi') {
+      liste = liste.filter((k) => k.tur === tur);
     }
     if (terim) {
       liste = liste.filter(
@@ -131,8 +137,26 @@ export class BooksListComponent {
   readonly kitapVar = computed(() => this.kitaplar().length > 0);
   readonly sonucVar = computed(() => this.gorunenKitaplar().length > 0);
   readonly filtreAktif = computed(
-    () => this.arama().trim().length > 0 || this.durumFiltresi() !== 'hepsi',
+    () =>
+      this.arama().trim().length > 0 ||
+      this.durumFiltresi() !== 'hepsi' ||
+      this.turFiltresi() !== 'hepsi',
   );
+
+  /** Mevcut kitaplarda gerçekten bulunan türler (alfabetik). */
+  readonly mevcutTurler = computed(() => {
+    const set = new Set<string>();
+    for (const k of this.kitaplar()) {
+      if (k.tur) set.add(k.tur);
+    }
+    return [...set].sort((a, b) => a.localeCompare(b, 'tr'));
+  });
+
+  readonly turFiltreEtiketi = computed(() => {
+    this.i18n.dil();
+    const t = this.turFiltresi();
+    return t === 'hepsi' ? this.i18n.t('toolbar.allGenres') : t;
+  });
 
   // --- Tablo kolonları (i18n başlıklar) ------------------------------------
   readonly kolonlar = computed<TableColumn[]>(() => {
@@ -208,6 +232,7 @@ export class BooksListComponent {
   filtreTemizle(): void {
     this.arama.set('');
     this.durumFiltresi.set('hepsi');
+    this.turFiltresi.set('hepsi');
   }
 
   private bildir(mesaj: string): void {

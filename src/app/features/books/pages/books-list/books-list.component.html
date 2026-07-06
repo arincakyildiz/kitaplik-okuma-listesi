@@ -55,8 +55,8 @@
         <input
           type="text"
           [placeholder]="'toolbar.search' | translate"
-          [ngModel]="arama()"
-          (ngModelChange)="arama.set($event)"
+          [value]="arama()"
+          (input)="arama.set($any($event.target).value)"
           [attr.aria-label]="'toolbar.search' | translate"
         />
         @if (arama()) {
@@ -83,6 +83,29 @@
             <button mat-menu-item (click)="durumFiltresi.set(d)">
               <app-status-badge [durum]="d" />
               <span class="menu-count">{{ sayaclar()[d] }}</span>
+            </button>
+          }
+        </mat-menu>
+
+        <!-- Tür filtresi -->
+        <button mat-stroked-button class="control" [matMenuTriggerFor]="genreMenu">
+          <mat-icon>category</mat-icon>
+          <span class="control-label">{{ turFiltreEtiketi() }}</span>
+          <mat-icon class="chev">expand_more</mat-icon>
+        </button>
+        <mat-menu #genreMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="turFiltresi.set('hepsi')">
+            <mat-icon>apps</mat-icon>
+            <span>{{ 'toolbar.allGenres' | translate }}</span>
+          </button>
+          @for (t of mevcutTurler(); track t) {
+            <button mat-menu-item (click)="turFiltresi.set(t)">
+              @if (turFiltresi() === t) {
+                <mat-icon>check</mat-icon>
+              } @else {
+                <mat-icon>label_outline</mat-icon>
+              }
+              <span>{{ t }}</span>
             </button>
           }
         </mat-menu>
