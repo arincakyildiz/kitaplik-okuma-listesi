@@ -11,6 +11,13 @@
       </div>
 
       <div class="nav-actions">
+        <img
+          src="book-reading-list.png"
+          class="nav-logo"
+          alt="Book Library & Reading List"
+          (click)="yeniKitap()"
+          role="button"
+        />
         <app-language-switcher />
         <button mat-flat-button class="add-btn desktop-only" (click)="yeniKitap()">
           <mat-icon>add</mat-icon>
@@ -29,21 +36,39 @@
       </div>
 
       <div class="stats">
-        <div class="stat">
-          <span class="stat-num">{{ sayaclar().hepsi }}</span>
-          <span class="stat-label">{{ 'shelf.stat.total' | translate }}</span>
+        <div class="stat stat-total">
+          <div class="stat-icon"><span class="material-icons">auto_stories</span></div>
+          <div class="stat-body">
+            <span class="stat-num">{{ sayaclar().hepsi }}</span>
+            <span class="stat-label">{{ 'shelf.stat.total' | translate }}</span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="stat-num" style="color: var(--status-read)">{{ sayaclar().okundu }}</span>
-          <span class="stat-label">{{ 'shelf.stat.read' | translate }}</span>
+
+        <div class="stat stat-read">
+          <div class="stat-icon"><span class="material-icons">check_circle</span></div>
+          <div class="stat-body">
+            <span class="stat-num">{{ sayaclar().okundu }}</span>
+            <span class="stat-label">{{ 'shelf.stat.read' | translate }}</span>
+          </div>
+          <div class="stat-bar"><span [style.width.%]="yuzde(sayaclar().okundu)"></span></div>
         </div>
-        <div class="stat">
-          <span class="stat-num" style="color: var(--status-reading)">{{ sayaclar().okunuyor }}</span>
-          <span class="stat-label">{{ 'shelf.stat.reading' | translate }}</span>
+
+        <div class="stat stat-reading">
+          <div class="stat-icon"><span class="material-icons">local_library</span></div>
+          <div class="stat-body">
+            <span class="stat-num">{{ sayaclar().okunuyor }}</span>
+            <span class="stat-label">{{ 'shelf.stat.reading' | translate }}</span>
+          </div>
+          <div class="stat-bar"><span [style.width.%]="yuzde(sayaclar().okunuyor)"></span></div>
         </div>
-        <div class="stat">
-          <span class="stat-num" style="color: var(--status-toread)">{{ sayaclar().okunacak }}</span>
-          <span class="stat-label">{{ 'shelf.stat.toread' | translate }}</span>
+
+        <div class="stat stat-toread">
+          <div class="stat-icon"><span class="material-icons">bookmark</span></div>
+          <div class="stat-body">
+            <span class="stat-num">{{ sayaclar().okunacak }}</span>
+            <span class="stat-label">{{ 'shelf.stat.toread' | translate }}</span>
+          </div>
+          <div class="stat-bar"><span [style.width.%]="yuzde(sayaclar().okunacak)"></span></div>
         </div>
       </div>
     </section>

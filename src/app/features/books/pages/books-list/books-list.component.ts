@@ -199,6 +199,12 @@ export class BooksListComponent {
     return this.i18n.t('status.' + d);
   }
 
+  /** Bir durumun toplam içindeki yüzdesi (istatistik barları için). */
+  yuzde(sayi: number): number {
+    const toplam = this.sayaclar().hepsi;
+    return toplam ? Math.round((sayi / toplam) * 100) : 0;
+  }
+
   yeniKitap(): void {
     this.router.navigate(['/kitaplar/ekle']);
   }
