@@ -1,0 +1,202 @@
+<div class="page">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logo"><span class="material-icons">auto_stories</span></div>
+        <div class="brand-text">
+          <span class="brand-name">{{ 'app.title' | translate }}</span>
+          <span class="brand-sub">{{ 'app.subtitle' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <app-language-switcher />
+        <button mat-flat-button class="add-btn desktop-only" (click)="yeniKitap()">
+          <mat-icon>add</mat-icon>
+          {{ 'nav.addBook' | translate }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <!-- Başlık + istatistikler -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>{{ 'shelf.title' | translate }}</h1>
+        <p>{{ altBaslik() }}</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-num">{{ sayaclar().hepsi }}</span>
+          <span class="stat-label">{{ 'shelf.stat.total' | translate }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" style="color: var(--status-read)">{{ sayaclar().okundu }}</span>
+          <span class="stat-label">{{ 'shelf.stat.read' | translate }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" style="color: var(--status-reading)">{{ sayaclar().okunuyor }}</span>
+          <span class="stat-label">{{ 'shelf.stat.reading' | translate }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" style="color: var(--status-toread)">{{ sayaclar().okunacak }}</span>
+          <span class="stat-label">{{ 'shelf.stat.toread' | translate }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Araç çubuğu -->
+    <section class="toolbar">
+      <div class="search">
+        <span class="material-icons search-icon">search</span>
+        <input
+          type="text"
+          [placeholder]="'toolbar.search' | translate"
+          [ngModel]="arama()"
+          (ngModelChange)="arama.set($event)"
+          [attr.aria-label]="'toolbar.search' | translate"
+        />
+        @if (arama()) {
+          <button class="clear" (click)="arama.set('')" aria-label="clear">
+            <span class="material-icons">close</span>
+          </button>
+        }
+      </div>
+
+      <div class="controls">
+        <!-- Filtre -->
+        <button mat-stroked-button class="control" [matMenuTriggerFor]="filterMenu">
+          <mat-icon>filter_list</mat-icon>
+          <span class="control-label">{{ filtreEtiketi() }}</span>
+          <mat-icon class="chev">expand_more</mat-icon>
+        </button>
+        <mat-menu #filterMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="durumFiltresi.set('hepsi')">
+            <mat-icon>apps</mat-icon>
+            <span>{{ 'toolbar.allBooks' | translate }}</span>
+            <span class="menu-count">{{ sayaclar().hepsi }}</span>
+          </button>
+          @for (d of durumlar; track d) {
+            <button mat-menu-item (click)="durumFiltresi.set(d)">
+              <app-status-badge [durum]="d" />
+              <span class="menu-count">{{ sayaclar()[d] }}</span>
+            </button>
+          }
+        </mat-menu>
+
+        <!-- Sıralama -->
+        <button mat-stroked-button class="control" [matMenuTriggerFor]="sortMenu">
+          <mat-icon>swap_vert</mat-icon>
+          <span class="control-label">{{ siralamaEtiketi() }}</span>
+          <mat-icon class="chev">expand_more</mat-icon>
+        </button>
+        <mat-menu #sortMenu="matMenu" xPosition="before">
+          @for (s of siralamalar; track s) {
+            <button mat-menu-item (click)="siralama.set(s)">
+              @if (siralama() === s) {
+                <mat-icon>check</mat-icon>
+              } @else {
+                <mat-icon>remove</mat-icon>
+              }
+              <span>{{ 'sort.' + s | translate }}</span>
+            </button>
+          }
+        </mat-menu>
+
+        <!-- Görünüm geçişi -->
+        <div class="view-toggle">
+          <button
+            class="view-btn"
+            [class.active]="gorunum() === 'kart'"
+            (click)="gorunum.set('kart')"
+            [matTooltip]="'toolbar.viewCard' | translate"
+            aria-label="card view"
+          >
+            <mat-icon>grid_view</mat-icon>
+          </button>
+          <button
+            class="view-btn"
+            [class.active]="gorunum() === 'tablo'"
+            (click)="gorunum.set('tablo')"
+            [matTooltip]="'toolbar.viewTable' | translate"
+            aria-label="table view"
+          >
+            <mat-icon>table_rows</mat-icon>
+          </button>
+        </div>
+
+        <button mat-flat-button class="add-btn mobile-add" (click)="yeniKitap()">
+          <mat-icon>add</mat-icon>
+          <span class="control-label">{{ 'toolbar.add' | translate }}</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Durumlar -->
+    @if (yukleniyor()) {
+      <app-loading-spinner [message]="'loading.text' | translate" />
+    } @else if (!kitapVar()) {
+      <div class="panel-card">
+        <app-empty-state
+          [title]="'empty.title' | translate"
+          [subtitle]="'empty.subtitle' | translate"
+          [actionLabel]="'empty.action' | translate"
+          (action)="yeniKitap()"
+        />
+      </div>
+    } @else if (!sonucVar()) {
+      <div class="panel-card">
+        <app-empty-state
+          icon="search_off"
+          [title]="'emptySearch.title' | translate"
+          [subtitle]="'emptySearch.subtitle' | translate"
+          [actionLabel]="'emptySearch.action' | translate"
+          (action)="filtreTemizle()"
+        />
+      </div>
+    } @else {
+      <div class="results-meta">
+        <span>{{ (gorunenKitaplar().length === 1 ? 'results.one' : 'results.many') | translate: { count: gorunenKitaplar().length } }}</span>
+        @if (filtreAktif()) {
+          <button class="reset" (click)="filtreTemizle()">
+            <mat-icon>close</mat-icon> {{ 'results.clear' | translate }}
+          </button>
+        }
+      </div>
+
+      @if (gorunum() === 'kart') {
+        <div class="grid">
+          @for (kitap of gorunenKitaplar(); track kitap.id) {
+            <app-book-card [kitap]="kitap" (duzenle)="duzenle($event)" (sil)="silOnayla($event)" />
+          }
+        </div>
+      } @else {
+        <app-data-table [data]="gorunenKitaplar()" [columns]="kolonlar()" trackKey="id">
+          <ng-template #cell let-kitap let-col="col">
+            @switch (col.key) {
+              @case ('ad') { <span class="cell-strong">{{ kitap.ad }}</span> }
+              @case ('durum') { <app-status-badge [durum]="kitap.durum" /> }
+              @case ('puan') { <app-star-rating [value]="kitap.puan" [showValue]="false" /> }
+              @case ('sayfaSayisi') { <span>{{ kitap.sayfaSayisi || '—' }}</span> }
+              @case ('tur') { <span>{{ kitap.tur || '—' }}</span> }
+              @case ('islemler') {
+                <div class="row-actions">
+                  <button mat-icon-button (click)="duzenle(kitap)" [matTooltip]="'card.edit' | translate">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="del" (click)="silOnayla(kitap)" [matTooltip]="'card.delete' | translate">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              }
+              @default { <span>{{ kitap[col.key] }}</span> }
+            }
+          </ng-template>
+        </app-data-table>
+      }
+    }
+  </main>
+</div>

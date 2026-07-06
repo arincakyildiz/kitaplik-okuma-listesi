@@ -1,0 +1,112 @@
+<div class="page">
+  <!-- Üst çubuk -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button mat-button class="back" (click)="geri()">
+        <mat-icon>arrow_back</mat-icon>
+        {{ 'nav.back' | translate }}
+      </button>
+      <span class="crumb">{{ 'app.title' | translate }}</span>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="form-card">
+      <!-- Başlık -->
+      <div class="head">
+        <div class="head-icon">
+          <span class="material-icons">{{ duzenlemeModu() ? 'edit_note' : 'library_add' }}</span>
+        </div>
+        <div class="head-text">
+          <h1>{{ (duzenlemeModu() ? 'form.editTitle' : 'form.addTitle') | translate }}</h1>
+          <p>{{ (duzenlemeModu() ? 'form.editSubtitle' : 'form.addSubtitle') | translate }}</p>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="kaydet()" class="body">
+        <!-- Ad -->
+        <app-form-field [label]="'form.name' | translate" [control]="form.controls.ad" [required]="true">
+          <input class="app-input" type="text" formControlName="ad" [placeholder]="'form.namePlaceholder' | translate" maxlength="120" />
+        </app-form-field>
+
+        <div class="grid-2">
+          <!-- Yazar -->
+          <app-form-field [label]="'form.author' | translate" [control]="form.controls.yazar" [required]="true">
+            <input class="app-input" type="text" formControlName="yazar" [placeholder]="'form.authorPlaceholder' | translate" maxlength="80" />
+          </app-form-field>
+
+          <!-- Tür -->
+          <app-form-field [label]="'form.genre' | translate" [control]="form.controls.tur" [optionalLabel]="'form.optional' | translate">
+            <div class="select-wrap">
+              <select class="app-input app-select" formControlName="tur">
+                <option value="">{{ 'form.selectGenre' | translate }}</option>
+                @for (t of turler; track t) {
+                  <option [value]="t">{{ t }}</option>
+                }
+              </select>
+              <span class="material-icons select-chev">expand_more</span>
+            </div>
+          </app-form-field>
+        </div>
+
+        <!-- Durum (segmented) -->
+        <app-form-field [label]="'form.status' | translate">
+          <div class="segmented" role="radiogroup">
+            @for (d of durumlar; track d) {
+              <button
+                type="button"
+                class="seg"
+                role="radio"
+                [attr.aria-checked]="form.controls.durum.value === d"
+                [class.active]="form.controls.durum.value === d"
+                (click)="durumSec(d)"
+              >
+                <app-status-badge [durum]="d" />
+              </button>
+            }
+          </div>
+        </app-form-field>
+
+        <div class="grid-2">
+          <!-- Sayfa -->
+          <app-form-field [label]="'form.pages' | translate" [control]="form.controls.sayfaSayisi" [optionalLabel]="'form.optional' | translate">
+            <div class="input-suffix">
+              <input class="app-input" type="number" formControlName="sayfaSayisi" placeholder="0" min="1" max="20000" />
+              <span class="suffix">{{ 'form.pagesSuffix' | translate }}</span>
+            </div>
+          </app-form-field>
+
+          <!-- Puan -->
+          <app-form-field [label]="'form.rating' | translate" [optionalLabel]="'form.optional' | translate">
+            <div class="rating-box">
+              <app-star-rating
+                [value]="puan()"
+                [editable]="true"
+                [showValue]="false"
+                size="lg"
+                (ratingChange)="puanSec($event)"
+              />
+              <span class="rating-hint">{{ puanEtiketi() }}</span>
+            </div>
+          </app-form-field>
+        </div>
+
+        <!-- Not -->
+        <app-form-field [label]="'form.notes' | translate" [optionalLabel]="'form.optional' | translate">
+          <textarea class="app-input app-textarea" formControlName="not" rows="3" maxlength="500" [placeholder]="'form.notesPlaceholder' | translate"></textarea>
+        </app-form-field>
+
+        <!-- Butonlar -->
+        <div class="foot">
+          <button type="button" mat-stroked-button class="cancel" (click)="iptal()">
+            {{ 'form.cancel' | translate }}
+          </button>
+          <button type="submit" mat-flat-button class="submit">
+            <mat-icon>{{ duzenlemeModu() ? 'save' : 'add' }}</mat-icon>
+            {{ (duzenlemeModu() ? 'form.save' : 'form.add') | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
