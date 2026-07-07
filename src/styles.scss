@@ -232,11 +232,16 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 }
 
 // Tooltip
+// Ters kontrast: --color-text/--color-bg tema ile birlikte otomatik
+// tersine döner, böylece hem açık hem koyu temada sayfa zeminiyle
+// karışmadan her zaman net görünür.
 .mat-mdc-tooltip .mdc-tooltip__surface {
-  background: #111827 !important;
+  background: var(--color-text) !important;
+  color: var(--color-bg) !important;
   border-radius: var(--radius-sm) !important;
   font-size: 12px !important;
   padding: 6px 10px !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 // Snackbar

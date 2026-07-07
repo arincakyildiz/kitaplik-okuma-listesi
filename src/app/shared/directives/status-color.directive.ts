@@ -1,11 +1,18 @@
 import { Directive, ElementRef, effect, inject, input, Renderer2 } from '@angular/core';
 import { OkumaDurumu } from '../../features/books/models/book.model';
 
-/** Her okuma durumu için renk paleti. */
-const DURUM_RENK: Record<OkumaDurumu, { renk: string; yumusak: string }> = {
+/** Her okuma durumu için renk paleti. Diğer bileşenlerde de (örn. form segment kontrolü) yeniden kullanılır. */
+export const DURUM_RENK: Record<OkumaDurumu, { renk: string; yumusak: string }> = {
   okundu: { renk: '#22c55e', yumusak: '#dcfce7' },
   okunuyor: { renk: '#f59e0b', yumusak: '#fef3c7' },
   okunacak: { renk: '#3b82f6', yumusak: '#dbeafe' },
+};
+
+/** Her okuma durumu için temsil edici ikon. */
+export const DURUM_IKON: Record<OkumaDurumu, string> = {
+  okundu: 'check_circle',
+  okunuyor: 'auto_stories',
+  okunacak: 'bookmark',
 };
 
 /**

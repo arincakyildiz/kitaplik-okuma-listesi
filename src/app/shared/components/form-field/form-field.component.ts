@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { I18nService } from '../../../core/services/i18n.service';
@@ -80,12 +82,33 @@ export class FormFieldComponent {
   readonly optionalLabel = input<string>('');
   readonly hint = input<string>('');
 
+  /**
+   * AbstractControl'ün touched/invalid/errors alanları normal (sinyal
+   * olmayan) mutasyonlardır — `markAllAsTouched()` gibi çağrılar
+   * computed()'i otomatik tetiklemez. `control.events` (Angular 14+)
+   * touched/value/status değişimlerinde yayın yapar; bunu dinleyip
+   * bir sayaç sinyalini artırarak computed()'lerin gerçek zamanlı
+   * yeniden hesaplanmasını sağlıyoruz.
+   */
+  private readonly tick = signal(0);
+
+  constructor() {
+    effect((onCleanup) => {
+      const c = this.control();
+      if (!c) return;
+      const sub = c.events.subscribe(() => this.tick.update((v) => v + 1));
+      onCleanup(() => sub.unsubscribe());
+    });
+  }
+
   readonly showError = computed(() => {
+    this.tick();
     const c = this.control();
     return !!c && c.invalid && (c.touched || c.dirty);
   });
 
   readonly errorText = computed(() => {
+    this.tick();
     const c = this.control();
     // i18n dilini reaktif tutmak için okuyoruz
     this.i18n.dil();

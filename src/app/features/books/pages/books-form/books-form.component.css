@@ -111,25 +111,69 @@
 .segmented {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 .seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-2) var(--space-3);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: transform 180ms var(--ease), border-color 180ms var(--ease),
+    background 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+.seg:hover {
+  transform: translateY(-2px);
+  border-color: var(--durum-renk);
+  box-shadow: var(--shadow-sm);
+}
+.seg-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  border: 1.5px solid var(--color-border);
-  background: var(--color-card);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all 180ms var(--ease);
+  color: var(--color-text-subtle);
+  background: var(--color-hover);
+  transition: color 180ms var(--ease), background 180ms var(--ease), transform 180ms var(--ease);
 }
-.seg:hover { border-color: var(--durum-renk, var(--color-primary)); }
+.seg-icon .material-icons { font-size: 22px; }
+.seg-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  transition: color 180ms var(--ease);
+}
+.seg-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--durum-renk);
+  line-height: 0;
+  animation: seg-pop 220ms var(--ease);
+}
+.seg-check .material-icons { font-size: 18px; }
+@keyframes seg-pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
 .seg.active {
-  border-color: var(--color-primary);
-  background: var(--color-primary-soft);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 14%, transparent);
+  border-color: var(--durum-renk);
+  background: var(--durum-yumusak);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--durum-renk) 16%, transparent);
 }
+.seg.active .seg-icon {
+  background: var(--color-card);
+  color: var(--durum-renk);
+  transform: scale(1.06);
+}
+.seg.active .seg-label { color: var(--color-text); }
 
 /* Puan kutusu */
 .rating-box {

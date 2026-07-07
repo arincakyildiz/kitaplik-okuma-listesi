@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -27,20 +28,20 @@ import {
 } from '../../../../shared/validators/custom-validators';
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field.component';
 import { StarRatingComponent } from '../../../../shared/components/star-rating/star-rating.component';
-import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { DURUM_IKON, DURUM_RENK } from '../../../../shared/directives/status-color.directive';
 
 @Component({
   selector: 'app-books-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    NgStyle,
     MatButtonModule,
     MatIconModule,
     FormFieldComponent,
     StarRatingComponent,
-    StatusBadgeComponent,
     TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,6 +124,16 @@ export class BooksFormComponent implements CanComponentDeactivate {
   durumSec(d: OkumaDurumu): void {
     this.form.controls.durum.setValue(d);
     this.form.controls.durum.markAsDirty();
+  }
+
+  durumIkon(d: OkumaDurumu): string {
+    return DURUM_IKON[d];
+  }
+
+  /** Segment butonunun rengini CSS değişkeni olarak bağlamak için. */
+  durumStil(d: OkumaDurumu): Record<string, string> {
+    const p = DURUM_RENK[d];
+    return { '--durum-renk': p.renk, '--durum-yumusak': p.yumusak };
   }
 
   puanSec(p: number): void {

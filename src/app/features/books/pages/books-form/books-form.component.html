@@ -59,9 +59,14 @@
                 role="radio"
                 [attr.aria-checked]="form.controls.durum.value === d"
                 [class.active]="form.controls.durum.value === d"
+                [ngStyle]="durumStil(d)"
                 (click)="durumSec(d)"
               >
-                <app-status-badge [durum]="d" />
+                @if (form.controls.durum.value === d) {
+                  <span class="seg-check"><span class="material-icons">check_circle</span></span>
+                }
+                <span class="seg-icon"><span class="material-icons">{{ durumIkon(d) }}</span></span>
+                <span class="seg-label">{{ 'status.' + d | translate }}</span>
               </button>
             }
           </div>
