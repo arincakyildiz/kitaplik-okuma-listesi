@@ -173,7 +173,13 @@
   color: var(--durum-renk);
   transform: scale(1.06);
 }
-.seg.active .seg-label { color: var(--color-text); }
+/*
+ * --durum-yumusak her zaman açık pastel bir renktir (temadan bağımsız),
+ * bu yüzden üzerindeki yazı da temaya göre değişen --color-text yerine
+ * sabit koyu bir renk kullanmalı — aksi halde dark mode'da açık zemin
+ * üstünde açık yazı görünmez hale geliyordu.
+ */
+.seg.active .seg-label { color: #1f2937; }
 
 /* Puan kutusu */
 .rating-box {
