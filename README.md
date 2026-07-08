@@ -6,6 +6,14 @@ Arayüz **Türkçe / İngilizce** dil desteğine sahiptir (sağ üstten anında 
 
 ---
 
+## 🖼️ Ekran Görüntüleri
+
+| Kitap listesi (dashboard, kart görünümü) | Kitap ekleme formu |
+| --- | --- |
+| ![Kitap listesi](docs/screenshots/liste.png) | ![Kitap ekleme formu](docs/screenshots/form.png) |
+
+---
+
 ## 🚀 Kurulum
 
 > Bu proje **Node.js 22 (LTS)** ile geliştirilmiştir. Angular tek (LTS olmayan) Node sürümlerini desteklemez.
