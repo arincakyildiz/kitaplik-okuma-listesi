@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { BooksService } from '../../services/books.service';
 import {
+  Alinti,
   KitapFormModel,
   OKUMA_DURUMLARI,
   OkumaDurumu,
@@ -65,6 +66,19 @@ export class BooksFormComponent implements CanComponentDeactivate {
 
   /** Puanı reaktif tutmak için signal (form control'ü signal değil). */
   readonly puan = signal<number>(0);
+
+  readonly alintilar = signal<Alinti[]>([]);
+
+  alintiEkle(metin: string, sayfaStr: string): void {
+    const metinTrimmed = metin.trim();
+    if (!metinTrimmed) return;
+    const sayfa = sayfaStr ? Number(sayfaStr) : undefined;
+    this.alintilar.update((list) => [...list, { metin: metinTrimmed, sayfa }]);
+  }
+
+  alintiSil(index: number): void {
+    this.alintilar.update((list) => list.filter((_, i) => i !== index));
+  }
 
   private kaydedildi = false;
 
@@ -124,6 +138,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
           not: kitap.not ?? '',
         });
         this.puan.set(kitap.puan ?? 0);
+        this.alintilar.set(kitap.alintilar || []);
       } else {
         // Geçersiz id → listeye dön
         this.router.navigate(['/kitaplar']);
@@ -161,6 +176,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
       return;
     }
     const v = this.form.getRawValue();
+    const eski = this.duzenlemeModu() ? this.books.getir(this.duzenlenenId()!) : null;
     const payload: KitapFormModel = {
       ad: v.ad.trim(),
       yazar: v.yazar.trim(),
@@ -171,6 +187,8 @@ export class BooksFormComponent implements CanComponentDeactivate {
       puan: v.puan || undefined,
       baslamaTarihi: v.baslamaTarihi || undefined,
       not: v.not.trim() || undefined,
+      alintilar: this.alintilar(),
+      timeline: eski?.timeline || undefined,
     };
 
     if (this.duzenlemeModu()) {

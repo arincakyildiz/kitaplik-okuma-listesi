@@ -123,6 +123,42 @@
           <textarea class="app-input app-textarea" formControlName="not" rows="3" maxlength="500" [placeholder]="'form.notesPlaceholder' | translate"></textarea>
         </app-form-field>
 
+        <!-- Alıntılar Bölümü -->
+        <div class="quotes-form-section">
+          <h3 class="section-title">
+            <span class="material-icons">format_quote</span>
+            {{ 'form.quotesSection' | translate }}
+          </h3>
+          
+          <div class="quote-input-row">
+            <input #metinInput class="app-input quote-text-input" type="text" [placeholder]="'form.quotePlaceholder' | translate" />
+            <input #sayfaInput class="app-input quote-page-input" type="number" [placeholder]="'form.quotePage' | translate" min="1" max="20000" />
+            <button type="button" mat-flat-button class="add-quote-btn" (click)="alintiEkle(metinInput.value, sayfaInput.value); metinInput.value=''; sayfaInput.value=''">
+              <mat-icon>add</mat-icon>
+              {{ 'form.addQuote' | translate }}
+            </button>
+          </div>
+
+          @if (alintilar().length > 0) {
+            <ul class="quotes-form-list">
+              @for (q of alintilar(); track q; let idx = $index) {
+                <li class="quote-form-item">
+                  <span class="quote-symbol">“</span>
+                  <div class="quote-content">
+                    <p class="quote-text">{{ q.metin }}</p>
+                    @if (q.sayfa) {
+                      <span class="quote-page-badge">sf. {{ q.sayfa }}</span>
+                    }
+                  </div>
+                  <button type="button" mat-icon-button class="quote-delete-btn" (click)="alintiSil(idx)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
         <!-- Butonlar -->
         <div class="foot">
           <button type="button" mat-stroked-button class="cancel" (click)="iptal()">

@@ -1,6 +1,17 @@
 /** Bir kitabın okuma durumu. */
 export type OkumaDurumu = 'okunacak' | 'okunuyor' | 'okundu';
 
+export interface Alinti {
+  metin: string;
+  sayfa?: number;
+}
+
+export interface TimelineLog {
+  tarih: string; // ISO string
+  mesaj: string;
+  deger?: string | number;
+}
+
 /** Uygulamadaki bir kitap kaydı. localStorage'da bu şekilde saklanır. */
 export interface Kitap {
   id: number;
@@ -13,6 +24,8 @@ export interface Kitap {
   puan?: number; // 1–5
   not?: string;
   baslamaTarihi?: string; // ISO tarih (yyyy-mm-dd) — gelecekte olamaz
+  alintilar?: Alinti[];
+  timeline?: TimelineLog[];
   eklenmeTarihi: string; // ISO tarih
 }
 

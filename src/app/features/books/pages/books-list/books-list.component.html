@@ -13,6 +13,21 @@
       <div class="nav-actions">
         <app-theme-toggle />
         <app-language-switcher />
+        <button mat-icon-button [matMenuTriggerFor]="backupMenu" [matTooltip]="'toolbar.backup' | translate">
+          <mat-icon>settings_backup_restore</mat-icon>
+        </button>
+        <mat-menu #backupMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="veriDisaAktar()">
+            <mat-icon>download</mat-icon>
+            <span>{{ 'toolbar.export' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            <span>{{ 'toolbar.import' | translate }}</span>
+          </button>
+        </mat-menu>
+        <input #fileInput type="file" (change)="veriIceAktar($event)" accept=".json" style="display: none;" />
+
         <button mat-flat-button class="add-btn desktop-only" (click)="yeniKitap()">
           <mat-icon>add</mat-icon>
           {{ 'nav.addBook' | translate }}
@@ -66,6 +81,96 @@
         </div>
       </div>
     </section>
+
+    <!-- Dashboard Collapsible Section -->
+    <div class="dashboard-collapsible" [class.collapsed]="!dashboardAcik()">
+      <button class="dashboard-toggle-btn" (click)="dashboardAcik.set(!dashboardAcik())">
+        <mat-icon>{{ dashboardAcik() ? 'analytics' : 'analytics' }}</mat-icon>
+        <span>{{ 'dashboard.title' | translate }}</span>
+        <mat-icon class="chev">{{ dashboardAcik() ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+
+      <div class="dashboard-content" [class.open]="dashboardAcik()">
+        <div class="dashboard-grid">
+          <!-- Yıllık Hedef (Left Side) -->
+          <div class="dashboard-card goal-card">
+            <h3>
+              <mat-icon>track_changes</mat-icon>
+              {{ 'dashboard.goalTitle' | translate }}
+            </h3>
+            
+            <div class="goal-info">
+              <span class="goal-text">
+                {{ 'dashboard.goalStatus' | translate: { completed: sayaclar().okundu, goal: yillikHedef(), percent: hedefYuzdesi() } }}
+              </span>
+              <div class="goal-edit-container">
+                @if (hedefDuzenleModu()) {
+                  <div class="goal-edit-inputs">
+                    <input #hedefInput type="number" class="app-input goal-input" [value]="yillikHedef()" min="1" max="500" />
+                    <button mat-icon-button class="save-goal-btn" (click)="hedefGuncelle(hedefInput.value)">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button class="cancel-goal-btn" (click)="hedefDuzenleModu.set(false)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                } @else {
+                  <button class="edit-goal-link" (click)="hedefDuzenleModu.set(true)">
+                    <mat-icon>edit</mat-icon>
+                    {{ 'dashboard.changeGoal' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+            
+            <div class="progress-track dashboard-progress">
+              <div class="progress-fill" [style.width.%]="hedefYuzdesi()"></div>
+            </div>
+          </div>
+
+          <!-- İstatistik Kartları Grid (Right Side) -->
+          <div class="dashboard-stats-grid">
+            <div class="db-stat-box">
+              <span class="db-stat-val">{{ toplamOkunanSayfa() }}</span>
+              <span class="db-stat-lbl">{{ 'dashboard.totalPages' | translate }}</span>
+            </div>
+            <div class="db-stat-box">
+              <span class="db-stat-val">{{ puanOrtalaması() | number: '1.1-1' }}</span>
+              <span class="db-stat-lbl">{{ 'dashboard.avgRating' | translate }}</span>
+            </div>
+            <div class="db-stat-box">
+              <span class="db-stat-val" [title]="favoriTur()">{{ favoriTur() ? ('genre.' + favoriTur() | translate) : '—' }}</span>
+              <span class="db-stat-lbl">{{ 'dashboard.favGenre' | translate }}</span>
+            </div>
+            <div class="db-stat-box">
+              <span class="db-stat-val">{{ 'dashboard.avgPagesValue' | translate: { count: ortalamaSayfaSayisi() } }}</span>
+              <span class="db-stat-lbl">{{ 'dashboard.avgPages' | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Günün Alıntısı (Bottom of dashboard) -->
+        <div class="dashboard-quote-section">
+          <h4>
+            <span class="material-icons">format_quote</span>
+            {{ 'dashboard.dailyQuote' | translate }}
+          </h4>
+          @if (gununAlintisi(); as qa) {
+            <blockquote class="db-blockquote">
+              <p class="db-quote-text">“{{ qa.metin }}”</p>
+              <cite class="db-quote-cite">
+                — {{ qa.yazar }}, <span class="db-quote-book">{{ qa.kitap }}</span>
+                @if (qa.sayfa) {
+                  <span class="db-quote-page"> (sf. {{ qa.sayfa }})</span>
+                }
+              </cite>
+            </blockquote>
+          } @else {
+            <p class="db-quote-empty">{{ 'dashboard.dailyQuoteEmpty' | translate }}</p>
+          }
+        </div>
+      </div>
+    </div>
 
     <!-- Araç çubuğu -->
     <section class="toolbar">

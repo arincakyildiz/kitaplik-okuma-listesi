@@ -32,6 +32,8 @@ import {
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
+import { DecimalPipe } from '@angular/common';
+
 const SIRALAMALAR: SiralamaAnahtari[] = [
   'yeni',
   'ad-artan',
@@ -58,6 +60,7 @@ const SIRALAMALAR: SiralamaAnahtari[] = [
     StarRatingComponent,
     DataTableComponent,
     TranslatePipe,
+    DecimalPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './books-list.component.html',
@@ -80,6 +83,104 @@ export class BooksListComponent {
   readonly turFiltresi = signal<string>('hepsi');
   readonly siralama = signal<SiralamaAnahtari>('yeni');
   readonly gorunum = signal<'kart' | 'tablo'>('kart');
+
+  // Dashboard & İstatistikler
+  readonly dashboardAcik = signal(false);
+  readonly hedefDuzenleModu = signal(false);
+  readonly yillikHedef = toSignal(this.books.yillikHedef$, { initialValue: 20 });
+
+  readonly hedefYuzdesi = computed(() => {
+    const okundu = this.sayaclar().okundu;
+    const hedef = this.yillikHedef();
+    if (hedef <= 0) return 0;
+    return Math.min(100, Math.round((okundu / hedef) * 100));
+  });
+
+  readonly toplamOkunanSayfa = computed(() => {
+    return this.kitaplar()
+      .filter((k) => k.durum === 'okundu' && k.sayfaSayisi)
+      .reduce((sum, k) => sum + (k.sayfaSayisi || 0), 0);
+  });
+
+  readonly puanOrtalaması = computed(() => {
+    const rated = this.kitaplar().filter((k) => k.puan && k.puan > 0);
+    if (rated.length === 0) return 0;
+    return rated.reduce((sum, k) => sum + (k.puan || 0), 0) / rated.length;
+  });
+
+  readonly favoriTur = computed(() => {
+    const counts: Record<string, number> = {};
+    for (const k of this.kitaplar()) {
+      if (k.tur) {
+        counts[k.tur] = (counts[k.tur] || 0) + 1;
+      }
+    }
+    let maxTur = '';
+    let maxCount = 0;
+    for (const [tur, count] of Object.entries(counts)) {
+      if (count > maxCount) {
+        maxCount = count;
+        maxTur = tur;
+      }
+    }
+    return maxTur;
+  });
+
+  readonly ortalamaSayfaSayisi = computed(() => {
+    const hasPages = this.kitaplar().filter((k) => k.sayfaSayisi && k.sayfaSayisi > 0);
+    if (hasPages.length === 0) return 0;
+    return Math.round(hasPages.reduce((sum, k) => sum + (k.sayfaSayisi || 0), 0) / hasPages.length);
+  });
+
+  readonly tumAlintilar = computed(() => {
+    const alintilar: { metin: string; yazar: string; kitap: string; sayfa?: number }[] = [];
+    for (const k of this.kitaplar()) {
+      if (k.alintilar) {
+        for (const q of k.alintilar) {
+          alintilar.push({ metin: q.metin, yazar: k.yazar, kitap: k.ad, sayfa: q.sayfa });
+        }
+      }
+    }
+    return alintilar;
+  });
+
+  readonly gununAlintisi = computed(() => {
+    const list = this.tumAlintilar();
+    if (list.length === 0) return null;
+    const day = new Date().getDate();
+    return list[day % list.length];
+  });
+
+  hedefGuncelle(deger: string): void {
+    const hedef = Number(deger);
+    if (hedef > 0) {
+      this.books.hedefGuncelle(hedef);
+      this.hedefDuzenleModu.set(false);
+    }
+  }
+
+  veriDisaAktar(): void {
+    this.books.disaAktar();
+  }
+
+  veriIceAktar(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result as string;
+        const basarili = this.books.iceAktar(text);
+        if (basarili) {
+          this.snack.open(this.i18n.t('toolbar.importSuccess'), this.i18n.t('toast.dismiss'), { duration: 3000 });
+        } else {
+          this.snack.open(this.i18n.t('toolbar.importError'), this.i18n.t('toast.dismiss'), { duration: 3000 });
+        }
+      };
+      reader.readAsText(file);
+      input.value = '';
+    }
+  }
 
   readonly durumlar = OKUMA_DURUMLARI;
   readonly turler = TURLER;

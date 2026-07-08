@@ -72,6 +72,9 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
                   <span class="detail-value">
                     {{ 'card.progressValue' | translate: { current: kitap().kalinanSayfa!, total: kitap().sayfaSayisi || 0, percent: okumaYuzdesi() } }}
                   </span>
+                  @if (kalanSüre()) {
+                    <span class="detail-time-hint">{{ kalanSüre() }}</span>
+                  }
                 </div>
               </div>
               <div class="progress-track">
@@ -117,6 +120,47 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
               </div>
             }
           </div>
+
+          <!-- Alıntılar -->
+          @if (kitap().alintilar && kitap().alintilar!.length > 0) {
+            <div class="detail-quotes-section">
+              <span class="detail-label">{{ 'card.quotesTitle' | translate: { count: kitap().alintilar!.length } }}</span>
+              <div class="detail-quotes-list">
+                @for (q of kitap().alintilar!; track q) {
+                  <div class="detail-quote-item">
+                    <span class="quote-symbol">“</span>
+                    <div class="quote-body">
+                      <p class="quote-text">{{ q.metin }}</p>
+                      @if (q.sayfa) {
+                        <span class="quote-page">sf. {{ q.sayfa }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Okuma Günlüğü -->
+          @if (kitap().timeline && kitap().timeline!.length > 0) {
+            <div class="detail-timeline-section">
+              <span class="detail-label">{{ 'card.timelineTitle' | translate }}</span>
+              <div class="detail-timeline-list">
+                @for (log of kitap().timeline!; track log) {
+                  <div class="timeline-item">
+                    <span class="timeline-dot"></span>
+                    <div class="timeline-content">
+                      <span class="timeline-date">{{ log.tarih | date: 'dd.MM.yyyy HH:mm' }}</span>
+                      <p class="timeline-msg">
+                        {{ log.mesaj | translate: { durum: ('status.' + log.deger | translate), sayfa: log.deger } }}
+                      </p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
           @if (kitap().not) {
             <div class="detail-note">
               <span class="material-icons">notes</span>
@@ -361,8 +405,123 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         transition: max-height 380ms cubic-bezier(0.4, 0, 0.2, 1);
       }
       .details-panel.open {
-        max-height: 300px;
+        max-height: 800px;
         border-bottom: 1px solid var(--color-border);
+      }
+      .detail-time-hint {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-top: 2px;
+        display: block;
+      }
+
+      /* Quotes section in details */
+      .detail-quotes-section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: var(--space-2);
+        border-top: 1px solid var(--color-border);
+      }
+      .detail-quotes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 140px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .detail-quote-item {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        background: rgba(0, 0, 0, 0.02);
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-md);
+        border-left: 3px solid var(--color-primary);
+      }
+      .detail-quote-item .quote-symbol {
+        font-size: 18px;
+        line-height: 14px;
+        font-family: Georgia, serif;
+        color: var(--color-primary);
+        opacity: 0.5;
+        text-shadow: none;
+        letter-spacing: normal;
+        margin: 0;
+        height: auto;
+        font-weight: normal;
+      }
+      .quote-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .quote-body .quote-text {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.4;
+        color: var(--color-text-muted);
+        font-style: italic;
+        border-left: none;
+        padding-left: 0;
+      }
+      .quote-body .quote-page {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--color-text-subtle);
+      }
+
+      /* Reading timeline section */
+      .detail-timeline-section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: var(--space-2);
+        border-top: 1px solid var(--color-border);
+      }
+      .detail-timeline-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-height: 150px;
+        overflow-y: auto;
+        padding: 4px 4px 4px 14px;
+        border-left: 2px solid var(--color-border);
+        margin-left: 6px;
+      }
+      .timeline-item {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+      }
+      .timeline-dot {
+        position: absolute;
+        left: -18px;
+        top: 5px;
+        width: 6px;
+        height: 6px;
+        background: var(--color-primary);
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px var(--color-primary-soft);
+      }
+      .timeline-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .timeline-date {
+        font-size: 9.5px;
+        font-weight: 700;
+        color: var(--color-text-subtle);
+      }
+      .timeline-msg {
+        margin: 0;
+        font-size: 11.5px;
+        line-height: 1.4;
+        color: var(--color-text-muted);
       }
       .details-inner {
         padding: 14px 16px 12px;
@@ -550,6 +709,19 @@ export class BookCardComponent {
     const k = this.kitap();
     if (!k.sayfaSayisi || !k.kalinanSayfa) return 0;
     return Math.min(100, Math.round((k.kalinanSayfa / k.sayfaSayisi) * 100));
+  });
+
+  readonly kalanSüre = computed(() => {
+    const k = this.kitap();
+    if (k.durum !== 'okunuyor' || !k.sayfaSayisi || !k.kalinanSayfa) return '';
+    const kalanSayfa = Math.max(0, k.sayfaSayisi - k.kalinanSayfa);
+    if (kalanSayfa === 0) return '';
+    const sureDk = Math.round(kalanSayfa * 1.5);
+    if (sureDk >= 60) {
+      const saat = (sureDk / 60).toFixed(1);
+      return this.i18n.t('card.readingTime', { time: saat });
+    }
+    return this.i18n.t('card.readingTimeMins', { time: sureDk });
   });
 
   detayAc(): void {

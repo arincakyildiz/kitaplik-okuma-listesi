@@ -162,6 +162,43 @@ export const CEVIRILER: Ceviriler = {
     'genre.Gizem': 'Gizem',
     'genre.Distopya': 'Distopya',
     'genre.Felsefi': 'Felsefi',
+
+    // Dashboard & İstatistikler
+    'dashboard.title': 'İstatistikler & Hedefler',
+    'dashboard.goalTitle': 'Yıllık Okuma Hedefim',
+    'dashboard.goalStatus': '{completed} / {goal} kitap okundu ({percent}%)',
+    'dashboard.changeGoal': 'Hedefi Güncelle',
+    'dashboard.totalPages': 'Okunan Toplam Sayfa',
+    'dashboard.avgRating': 'Puan Ortalaması',
+    'dashboard.favGenre': 'Favori Tür',
+    'dashboard.avgPages': 'Ort. Kitap Boyutu',
+    'dashboard.avgPagesValue': '{count} sayfa',
+    'dashboard.dailyQuote': 'Günün Alıntısı',
+    'dashboard.dailyQuoteEmpty': 'Henüz alıntı eklenmemiş. Kitap eklerken veya düzenlerken beğendiğin cümleleri alıntı olarak kaydedebilirsin!',
+
+    // Kitap Kartı Ekstra
+    'card.readingTime': 'Kalan süre: ~{time} saat',
+    'card.readingTimeMins': 'Kalan süre: ~{time} dk',
+    'card.quotesTitle': 'Kitap Alıntıları ({count})',
+    'card.timelineTitle': 'Okuma Günlüğü',
+    'timeline.created': 'Kitaplık okuma listesine eklendi.',
+    'timeline.status_changed': 'Okuma durumu “{durum}” olarak güncellendi.',
+    'timeline.page_changed': 'Kaldığı sayfa {sayfa} olarak güncellendi.',
+    'timeline.completed': 'Kitap okuması tamamlandı! 🎉',
+
+    // Form Ekstra
+    'form.quotesSection': 'Kitaptan Alıntılar',
+    'form.addQuote': 'Yeni Alıntı Ekle',
+    'form.quoteText': 'Alıntı metni',
+    'form.quotePage': 'Sayfa',
+    'form.quotePlaceholder': 'Kitaptan beğendiğin bir cümleyi yaz...',
+
+    // Toolbar Ekstra
+    'toolbar.backup': 'Veri Yedekleme / Yükleme',
+    'toolbar.export': 'Verileri Dışa Aktar (JSON)',
+    'toolbar.import': 'Yedek Dosyası Yükle',
+    'toolbar.importSuccess': 'Veriler başarıyla içe aktarıldı!',
+    'toolbar.importError': 'Geçersiz yedek dosyası!',
   },
   en: {
     'app.title': 'My Library',
@@ -319,5 +356,42 @@ export const CEVIRILER: Ceviriler = {
     'genre.Gizem': 'Mystery',
     'genre.Distopya': 'Dystopian',
     'genre.Felsefi': 'Philosophical',
+
+    // Dashboard & Stats
+    'dashboard.title': 'Stats & Goals',
+    'dashboard.goalTitle': 'Yearly Reading Goal',
+    'dashboard.goalStatus': '{completed} / {goal} books read ({percent}%)',
+    'dashboard.changeGoal': 'Update Goal',
+    'dashboard.totalPages': 'Total Pages Read',
+    'dashboard.avgRating': 'Avg Rating',
+    'dashboard.favGenre': 'Favorite Genre',
+    'dashboard.avgPages': 'Avg Book Size',
+    'dashboard.avgPagesValue': '{count} pages',
+    'dashboard.dailyQuote': 'Quote of the Day',
+    'dashboard.dailyQuoteEmpty': 'No quotes added yet. You can save quotes when adding or editing a book!',
+
+    // Book Card Extra
+    'card.readingTime': 'Remaining: ~{time} hrs',
+    'card.readingTimeMins': 'Remaining: ~{time} mins',
+    'card.quotesTitle': 'Book Quotes ({count})',
+    'card.timelineTitle': 'Reading Log',
+    'timeline.created': 'Added to reading list.',
+    'timeline.status_changed': 'Reading status updated to “{durum}”.',
+    'timeline.page_changed': 'Current page updated to {sayfa}.',
+    'timeline.completed': 'Completed reading! 🎉',
+
+    // Form Extra
+    'form.quotesSection': 'Book Quotes',
+    'form.addQuote': 'Add New Quote',
+    'form.quoteText': 'Quote text',
+    'form.quotePage': 'Page',
+    'form.quotePlaceholder': 'Write a sentence you like from the book...',
+
+    // Toolbar Extra
+    'toolbar.backup': 'Data Backup / Restore',
+    'toolbar.export': 'Export Data (JSON)',
+    'toolbar.import': 'Import Backup File',
+    'toolbar.importSuccess': 'Backup imported successfully!',
+    'toolbar.importError': 'Invalid backup file!',
   },
 };

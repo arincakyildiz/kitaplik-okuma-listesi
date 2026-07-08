@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { StorageService } from '../../../core/services/storage.service';
-import { Kitap, KitapFormModel, OkumaDurumu } from '../models/book.model';
+import { Alinti, Kitap, KitapFormModel, OkumaDurumu, TimelineLog } from '../models/book.model';
 
 const STORAGE_KEY = 'kitaplik.kitaplar.v1';
+const HEDEF_KEY = 'kitaplik.yillikHedef';
 
 /**
  * Kitap veri servisi.
@@ -17,10 +18,14 @@ export class BooksService {
   private readonly kitaplarSubject = new BehaviorSubject<Kitap[]>([]);
   private readonly yukleniyorSubject = new BehaviorSubject<boolean>(true);
 
+  private readonly yillikHedefSubject = new BehaviorSubject<number>(20);
+
   /** Kitap listesi akışı. */
   readonly kitaplar$: Observable<Kitap[]> = this.kitaplarSubject.asObservable();
   /** Yükleniyor durumu akışı. */
   readonly yukleniyor$: Observable<boolean> = this.yukleniyorSubject.asObservable();
+  /** Yıllık okuma hedefi akışı. */
+  readonly yillikHedef$: Observable<number> = this.yillikHedefSubject.asObservable();
 
   constructor() {
     this.yukle();
@@ -32,25 +37,102 @@ export class BooksService {
     return this.kitaplarSubject.value;
   }
 
+  /** Yıllık hedef değeri (senkron). */
+  get yillikHedef(): number {
+    return this.yillikHedefSubject.value;
+  }
+
   /** id ile tek kitap (senkron). */
   getir(id: number): Kitap | undefined {
     return this.kitaplarSubject.value.find((k) => k.id === id);
   }
 
+  /** Yıllık hedefi günceller. */
+  hedefGuncelle(hedef: number): void {
+    this.yillikHedefSubject.next(hedef);
+    this.storage.write(HEDEF_KEY, hedef);
+  }
+
+  // --- Veri Yedekleme / Yükleme --------------------------------------------
+  /** Kütüphaneyi JSON olarak indirir. */
+  disaAktar(): void {
+    if (typeof window === 'undefined') return;
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.kitaplar, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute('href', dataStr);
+    dlAnchor.setAttribute('download', `kitaplik_yedek_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+  }
+
+  /** JSON yedeğini yükler. */
+  iceAktar(veriStr: string): boolean {
+    try {
+      const parsed = JSON.parse(veriStr);
+      if (Array.isArray(parsed)) {
+        const dogrula = parsed.every(
+          (k) =>
+            k &&
+            typeof k.id === 'number' &&
+            typeof k.ad === 'string' &&
+            typeof k.yazar === 'string' &&
+            typeof k.durum === 'string'
+        );
+        if (dogrula) {
+          this.yayinla(parsed);
+          return true;
+        }
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   // --- CRUD ----------------------------------------------------------------
   ekle(form: KitapFormModel): Kitap {
+    const simdi = new Date().toISOString();
+    const log: TimelineLog = {
+      tarih: simdi,
+      mesaj: 'timeline.created',
+    };
+    
     const kitap: Kitap = {
       ...form,
       id: this.siradakiId(),
-      eklenmeTarihi: new Date().toISOString(),
+      eklenmeTarihi: simdi,
+      timeline: [log],
     };
     this.yayinla([kitap, ...this.kitaplarSubject.value]);
     return kitap;
   }
 
   guncelle(id: number, form: KitapFormModel): void {
+    const eski = this.kitaplarSubject.value.find((k) => k.id === id);
+    if (!eski) return;
+
+    const logs: TimelineLog[] = [...(eski.timeline || [])];
+    const simdi = new Date().toISOString();
+
+    if (eski.durum !== form.durum) {
+      if (form.durum === 'okundu') {
+        logs.push({ tarih: simdi, mesaj: 'timeline.completed' });
+      } else {
+        logs.push({ tarih: simdi, mesaj: 'timeline.status_changed', deger: form.durum });
+      }
+    }
+
+    if (
+      form.durum === 'okunuyor' &&
+      eski.kalinanSayfa !== form.kalinanSayfa &&
+      form.kalinanSayfa !== undefined
+    ) {
+      logs.push({ tarih: simdi, mesaj: 'timeline.page_changed', deger: form.kalinanSayfa });
+    }
+
     const yeni = this.kitaplarSubject.value.map((k) =>
-      k.id === id ? { ...k, ...form } : k,
+      k.id === id ? { ...k, ...form, timeline: logs } : k
     );
     this.yayinla(yeni);
   }
@@ -78,6 +160,12 @@ export class BooksService {
       this.kitaplarSubject.next(kitaplar);
       // İlk kez açılıyorsa örnekleri kalıcı hale getir.
       if (!kayitli) this.storage.write(STORAGE_KEY, kitaplar);
+
+      const kayitliHedef = this.storage.read<number | null>(HEDEF_KEY, null);
+      if (kayitliHedef !== null) {
+        this.yillikHedefSubject.next(kayitliHedef);
+      }
+
       this.yukleniyorSubject.next(false);
     }, 600);
   }
@@ -98,34 +186,61 @@ function ORNEK_KITAPLAR(): Kitap[] {
     puan: number,
     not = '',
     kalinanSayfa?: number,
-  ): Kitap => ({
-    id,
-    ad,
-    yazar,
-    tur,
-    durum,
-    sayfaSayisi,
-    puan,
-    not,
-    kalinanSayfa,
-    eklenmeTarihi: new Date(now - id * 8_000_000).toISOString(),
-  });
+    alintilar?: Alinti[]
+  ): Kitap => {
+    const eklenmeISO = new Date(now - id * 8_000_000).toISOString();
+    const timeline: TimelineLog[] = [
+      { tarih: eklenmeISO, mesaj: 'timeline.created' }
+    ];
+    if (durum === 'okunuyor') {
+      timeline.push({ tarih: new Date(now - id * 4_000_000).toISOString(), mesaj: 'timeline.status_changed', deger: 'okunuyor' });
+      if (kalinanSayfa) {
+        timeline.push({ tarih: new Date(now - id * 2_000_000).toISOString(), mesaj: 'timeline.page_changed', deger: kalinanSayfa });
+      }
+    } else if (durum === 'okundu') {
+      timeline.push({ tarih: new Date(now - id * 4_000_000).toISOString(), mesaj: 'timeline.status_changed', deger: 'okunuyor' });
+      timeline.push({ tarih: new Date(now - id * 1_000_000).toISOString(), mesaj: 'timeline.completed' });
+    }
+    return {
+      id,
+      ad,
+      yazar,
+      tur,
+      durum,
+      sayfaSayisi,
+      puan,
+      not,
+      kalinanSayfa,
+      alintilar,
+      timeline,
+      eklenmeTarihi: eklenmeISO,
+    };
+  };
 
   return [
-    yap(20, 'Suç ve Ceza', 'Fyodor Dostoyevski', 'Roman', 'okundu', 687, 5, 'Raskolnikov karakteri unutulmaz.'),
+    yap(20, 'Suç ve Ceza', 'Fyodor Dostoyevski', 'Roman', 'okundu', 687, 5, 'Raskolnikov karakteri unutulmaz.', undefined, [
+      { metin: 'Hayatta her şey insana bağlıdır ve insan her şeyi korkaklığı yüzünden kaçırır.', sayfa: 12 }
+    ]),
     yap(19, 'Sefiller', 'Victor Hugo', 'Roman', 'okunuyor', 1463, 4, '', 450),
     yap(18, 'Dune', 'Frank Herbert', 'Bilim Kurgu', 'okunacak', 688, 0, 'Filmden önce okunacak.'),
-    yap(17, 'Sapiens', 'Yuval Noah Harari', 'Tarih', 'okundu', 443, 5, 'İnsanlığın kısa tarihi.'),
+    yap(17, 'Sapiens', 'Yuval Noah Harari', 'Tarih', 'okundu', 443, 5, 'İnsanlığın kısa tarihi.', undefined, [
+      { metin: 'Tarih, az sayıda insanın yaptığı ama geri kalanların tarlaları sürüp su taşıdığı bir şeydir.', sayfa: 104 }
+    ]),
     yap(16, 'Hayvan Çiftliği', 'George Orwell', 'Roman', 'okundu', 152, 4, ''),
     yap(15, 'Atomik Alışkanlıklar', 'James Clear', 'Kişisel Gelişim', 'okunuyor', 320, 4, 'Alışkanlık istifleme bölümündeyim.', 120),
     yap(14, 'Otostopçunun Galaksi Rehberi', 'Douglas Adams', 'Bilim Kurgu', 'okunacak', 224, 0, ''),
     yap(13, 'Kürk Mantolu Madonna', 'Sabahattin Ali', 'Roman', 'okundu', 160, 5, ''),
-    yap(12, 'Küçük Prens', 'Antoine de Saint-Exupéry', 'Klasik', 'okundu', 96, 5, 'Her yaştan insan okuyabilir.'),
+    yap(12, 'Küçük Prens', 'Antoine de Saint-Exupéry', 'Klasik', 'okundu', 96, 5, 'Her yaştan insan okuyabilir.', undefined, [
+      { metin: 'Gönül gözüyle görmeli insan; çünkü asıl görülmesi gerekenler gözle görülemez.', sayfa: 72 },
+      { metin: 'Vereceğin kararların sorumluluğunu üstlenmelisin.', sayfa: 45 }
+    ]),
     yap(11, 'Fahrenheit 451', 'Ray Bradbury', 'Bilim Kurgu', 'okundu', 256, 4, 'Kitap yakmak üzerine bir kitap.'),
     yap(10, 'Simyacı', 'Paulo Coelho', 'Roman', 'okunuyor', 208, 3, 'Kişisel efsane yolculuğu.'),
     yap(9, 'Sherlock Holmes', 'Arthur Conan Doyle', 'Gizem', 'okundu', 307, 4, ''),
     yap(8, 'Yüzüklerin Efendisi', 'J.R.R. Tolkien', 'Fantastik', 'okunacak', 1178, 0, 'Serinin ilk kitabıyla başlayacağım.'),
-    yap(7, 'Cesur Yeni Dünya', 'Aldous Huxley', 'Distopya', 'okundu', 311, 4, '1984 ile birlikte okunmalı.'),
+    yap(7, 'Cesur Yeni Dünya', 'Aldous Huxley', 'Distopya', 'okundu', 311, 4, '1984 ile birlikte okunmalı.', undefined, [
+      { metin: 'İnsan mutlu olunca iyi olamaz.', sayfa: 210 }
+    ]),
     yap(6, '1984', 'George Orwell', 'Distopya', 'okundu', 328, 5, 'Big Brother sizi izliyor.'),
     yap(5, 'Don Kişot', 'Miguel de Cervantes', 'Klasik', 'okunacak', 992, 0, ''),
     yap(4, 'Siddhartha', 'Hermann Hesse', 'Felsefi', 'okundu', 152, 4, 'Aydınlanma yolculuğu.'),

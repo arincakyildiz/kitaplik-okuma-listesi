@@ -226,3 +226,108 @@
   .foot { flex-direction: column-reverse; }
   .foot button { width: 100%; }
 }
+
+/* Alıntılar Bölümü */
+.quotes-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-2);
+}
+.section-title .material-icons {
+  font-size: 18px;
+  color: var(--color-primary);
+}
+.quote-input-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+.quote-text-input {
+  flex: 1;
+}
+.quote-page-input {
+  width: 100px;
+}
+.add-quote-btn {
+  height: 48px;
+  --mdc-filled-button-container-color: var(--color-primary-soft);
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: none !important;
+}
+.add-quote-btn:hover {
+  background: var(--color-hover) !important;
+}
+.quotes-form-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.quote-form-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-hover);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+.quote-symbol {
+  font-size: 32px;
+  line-height: 24px;
+  font-family: Georgia, serif;
+  color: var(--color-primary);
+  opacity: 0.3;
+  user-select: none;
+}
+.quote-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.quote-text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--color-text);
+  font-style: italic;
+}
+.quote-page-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+.quote-delete-btn {
+  color: var(--color-text-muted) !important;
+}
+.quote-delete-btn:hover {
+  color: var(--color-danger) !important;
+  background: var(--color-danger-soft) !important;
+}
+
+@media (max-width: 560px) {
+  .quote-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .quote-page-input {
+    width: 100%;
+  }
+}
