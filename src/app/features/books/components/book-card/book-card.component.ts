@@ -152,7 +152,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
                     <div class="timeline-content">
                       <span class="timeline-date">{{ log.tarih | date: 'dd.MM.yyyy HH:mm' }}</span>
                       <p class="timeline-msg">
-                        {{ log.mesaj | translate: { durum: ('status.' + log.deger | translate), sayfa: log.deger } }}
+                        {{ log.mesaj | translate: { durum: ('status.' + (log.deger ?? '') | translate), sayfa: log.deger ?? '' } }}
                       </p>
                     </div>
                   </div>
