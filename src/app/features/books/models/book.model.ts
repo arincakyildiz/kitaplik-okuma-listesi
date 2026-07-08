@@ -48,5 +48,9 @@ export const TURLER: string[] = [
   'Felsefe',
   'Şiir',
   'Çocuk',
+  'Klasik',
+  'Gizem',
+  'Distopya',
+  'Felsefi',
   'Diğer',
 ];

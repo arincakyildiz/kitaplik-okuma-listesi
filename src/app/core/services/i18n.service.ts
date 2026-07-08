@@ -34,7 +34,13 @@ export class I18nService {
    * `{isim}` yer tutucuları `params` ile doldurulur.
    */
   t(key: string, params?: Record<string, string | number>): string {
-    let text = this.sozluk()[key] ?? key;
+    let text = this.sozluk()[key];
+    if (text === undefined) {
+      if (key.startsWith('genre.')) {
+        return key.slice(6);
+      }
+      text = key;
+    }
     if (params) {
       for (const [k, v] of Object.entries(params)) {
         text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));

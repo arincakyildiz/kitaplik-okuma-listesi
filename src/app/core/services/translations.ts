@@ -154,6 +154,10 @@ export const CEVIRILER: Ceviriler = {
     'genre.Şiir': 'Şiir',
     'genre.Çocuk': 'Çocuk',
     'genre.Diğer': 'Diğer',
+    'genre.Klasik': 'Klasik',
+    'genre.Gizem': 'Gizem',
+    'genre.Distopya': 'Distopya',
+    'genre.Felsefi': 'Felsefi',
   },
   en: {
     'app.title': 'My Library',
@@ -303,5 +307,9 @@ export const CEVIRILER: Ceviriler = {
     'genre.Şiir': 'Poetry',
     'genre.Çocuk': 'Children',
     'genre.Diğer': 'Other',
+    'genre.Klasik': 'Classic',
+    'genre.Gizem': 'Mystery',
+    'genre.Distopya': 'Dystopian',
+    'genre.Felsefi': 'Philosophical',
   },
 };
