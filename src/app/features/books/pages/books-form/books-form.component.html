@@ -82,7 +82,7 @@
           </app-form-field>
 
           <!-- Kaldığın Sayfa -->
-          @if (form.controls.durum.value === 'okunuyor' || form.controls.durum.value === 'okundu') {
+          @if (form.controls.durum.value === 'okunuyor') {
             <app-form-field [label]="'form.currentPage' | translate" [control]="form.controls.kalinanSayfa" [optionalLabel]="'form.optional' | translate">
               <div class="input-suffix">
                 <input class="app-input" type="number" formControlName="kalinanSayfa" placeholder="0" min="0" max="20000" />

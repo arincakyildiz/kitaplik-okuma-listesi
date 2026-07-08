@@ -140,7 +140,12 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
           }
           @if (kitap().sayfaSayisi) {
             <span class="pages">
-              <span class="material-icons">description</span>{{ 'card.pages' | translate: { count: kitap().sayfaSayisi! } }}
+              <span class="material-icons">description</span>
+              @if (kitap().durum === 'okunuyor' && kitap().kalinanSayfa) {
+                {{ kitap().kalinanSayfa }} / {{ 'card.pages' | translate: { count: kitap().sayfaSayisi! } }}
+              } @else {
+                {{ 'card.pages' | translate: { count: kitap().sayfaSayisi! } }}
+              }
             </span>
           }
         </div>

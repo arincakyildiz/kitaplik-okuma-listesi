@@ -167,7 +167,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
       tur: v.tur || undefined,
       durum: v.durum,
       sayfaSayisi: v.sayfaSayisi ?? undefined,
-      kalinanSayfa: v.kalinanSayfa ?? undefined,
+      kalinanSayfa: v.durum === 'okunuyor' ? (v.kalinanSayfa ?? undefined) : undefined,
       puan: v.puan || undefined,
       baslamaTarihi: v.baslamaTarihi || undefined,
       not: v.not.trim() || undefined,
