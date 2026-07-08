@@ -206,10 +206,20 @@ export class BooksService {
     // Yükleniyor durumunu görünür kılmak için kısa gecikme.
     setTimeout(() => {
       const kayitli = this.storage.read<Kitap[] | null>(STORAGE_KEY, null);
-      const kitaplar = kayitli && kayitli.length >= 0 ? kayitli : ORNEK_KITAPLAR();
+      
+      let varsayilan: Kitap[] = [];
+      if (typeof window !== 'undefined') {
+        const host = window.location.hostname;
+        const isLocal = host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.');
+        if (isLocal) {
+          varsayilan = ORNEK_KITAPLAR();
+        }
+      }
+
+      const kitaplar = kayitli !== null ? kayitli : varsayilan;
       this.kitaplarSubject.next(kitaplar);
-      // İlk kez açılıyorsa örnekleri kalıcı hale getir.
-      if (!kayitli) this.storage.write(STORAGE_KEY, kitaplar);
+      // İlk kez açılıyorsa varsayılanı kalıcı hale getir.
+      if (kayitli === null) this.storage.write(STORAGE_KEY, kitaplar);
 
       const kayitliHedef = this.storage.read<number | null>(HEDEF_KEY, null);
       if (kayitliHedef !== null) {
