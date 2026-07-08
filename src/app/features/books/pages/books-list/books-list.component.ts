@@ -385,7 +385,27 @@ export class BooksListComponent {
       }
     });
   }
+  ornekVerileriYukle(): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: this.i18n.t('toolbar.loadSamples'),
+        message: this.i18n.t('toolbar.loadSamplesConfirm'),
+        confirmText: this.i18n.t('confirm.yes'),
+        cancelText: this.i18n.t('confirm.cancel'),
+        danger: true,
+      },
+      panelClass: 'app-dialog',
+      autoFocus: false,
+      maxWidth: '96vw',
+    });
 
+    ref.afterClosed().subscribe((onay) => {
+      if (onay) {
+        this.books.ornekVeriYukle();
+        this.bildir(this.i18n.t('toolbar.loadSamplesSuccess'));
+      }
+    });
+  }
   filtreTemizle(): void {
     this.arama.set('');
     this.durumFiltresi.set('hepsi');

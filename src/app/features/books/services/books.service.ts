@@ -133,6 +133,13 @@ export class BooksService {
     }
   }
 
+  /** Örnek verileri kütüphaneye yükler (mevcut verileri sıfırlar). */
+  ornekVeriYukle(): void {
+    const ornekler = ORNEK_KITAPLAR();
+    this.yayinla(ornekler);
+    this.hedefGuncelle(20);
+  }
+
   // --- CRUD ----------------------------------------------------------------
   ekle(form: KitapFormModel): Kitap {
     const simdi = new Date().toISOString();
@@ -261,6 +268,16 @@ function ORNEK_KITAPLAR(): Kitap[] {
   };
 
   return [
+    yap(30, 'Savaş ve Barış', 'Leo Tolstoy', 'Roman', 'okundu', 1225, 5, 'Çok uzun ama muhteşem bir destan.'),
+    yap(29, 'Martin Eden', 'Jack London', 'Roman', 'okunuyor', 400, 5, 'Bireyin topluma karşı mücadelesi.', 150),
+    yap(28, 'Dönüşüm', 'Franz Kafka', 'Klasik', 'okundu', 80, 4, 'Gregor Samsa bir sabah uyandığında...'),
+    yap(27, 'Karamazov Kardeşler', 'Fyodor Dostoyevski', 'Roman', 'okunacak', 1008, 0),
+    yap(26, 'Yüzyıllık Yalnızlık', 'Gabriel García Márquez', 'Roman', 'okundu', 464, 4),
+    yap(25, 'Devlet', 'Platon', 'Felsefe', 'okunacak', 372, 0),
+    yap(24, 'Faust', 'Johann Wolfgang von Goethe', 'Klasik', 'okundu', 350, 4),
+    yap(23, 'Körlük', 'José Saramago', 'Roman', 'okunuyor', 320, 5, 'Etkileyici bir distopya toplumsal eleştiri.', 200),
+    yap(22, 'Ulusların Zenginliği', 'Adam Smith', 'Felsefe', 'okundu', 900, 4),
+    yap(21, 'Denemeler', 'Michel de Montaigne', 'Felsefi', 'okundu', 320, 5),
     yap(20, 'Suç ve Ceza', 'Fyodor Dostoyevski', 'Roman', 'okundu', 687, 5, 'Raskolnikov karakteri unutulmaz.', undefined, [
       { metin: 'Hayatta her şey insana bağlıdır ve insan her şeyi korkaklığı yüzünden kaçırır.', sayfa: 12 }
     ]),

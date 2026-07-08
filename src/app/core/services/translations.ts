@@ -127,6 +127,7 @@ export const CEVIRILER: Ceviriler = {
     'confirm.deleteText': '“{title}” kitabını silmek istediğine emin misin? Bu işlem geri alınamaz.',
     'confirm.cancel': 'İptal',
     'confirm.delete': 'Sil',
+    'confirm.yes': 'Evet',
 
     'guard.title': 'Kaydedilmemiş değişiklikler',
     'guard.text': 'Kaydedilmemiş değişiklikler var. Yine de çıkmak istiyor musun?',
@@ -200,6 +201,9 @@ export const CEVIRILER: Ceviriler = {
     'toolbar.import': 'Yedek Dosyası Yükle',
     'toolbar.importSuccess': 'Veriler başarıyla içe aktarıldı!',
     'toolbar.importError': 'Geçersiz yedek dosyası!',
+    'toolbar.loadSamples': 'Örnek Verileri Yükle',
+    'toolbar.loadSamplesConfirm': 'Kütüphanenizdeki mevcut veriler silinecek ve 30 adet örnek kitap yüklenecektir. Devam etmek istiyor musunuz?',
+    'toolbar.loadSamplesSuccess': '30 adet örnek kitap başarıyla yüklendi!',
   },
   en: {
     'app.title': 'My Library',
@@ -322,6 +326,7 @@ export const CEVIRILER: Ceviriler = {
     'confirm.deleteText': 'Are you sure you want to delete “{title}”? This action cannot be undone.',
     'confirm.cancel': 'Cancel',
     'confirm.delete': 'Delete',
+    'confirm.yes': 'Yes',
 
     'guard.title': 'Unsaved changes',
     'guard.text': 'You have unsaved changes. Do you still want to leave?',
@@ -395,5 +400,8 @@ export const CEVIRILER: Ceviriler = {
     'toolbar.import': 'Import Backup File',
     'toolbar.importSuccess': 'Backup imported successfully!',
     'toolbar.importError': 'Invalid backup file!',
+    'toolbar.loadSamples': 'Load Sample Data',
+    'toolbar.loadSamplesConfirm': 'All current data in your library will be deleted and 30 sample books will be loaded. Do you want to proceed?',
+    'toolbar.loadSamplesSuccess': '30 sample books loaded successfully!',
   },
 };

@@ -29,6 +29,10 @@
             <mat-icon>upload</mat-icon>
             <span>{{ 'toolbar.import' | translate }}</span>
           </button>
+          <button mat-menu-item (click)="ornekVerileriYukle()">
+            <mat-icon>restore</mat-icon>
+            <span>{{ 'toolbar.loadSamples' | translate }}</span>
+          </button>
         </mat-menu>
         <input #fileInput type="file" (change)="veriIceAktar($event)" accept=".json" style="display: none;" />
 
