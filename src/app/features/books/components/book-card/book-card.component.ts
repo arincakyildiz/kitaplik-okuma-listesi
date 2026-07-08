@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Kitap } from '../../models/book.model';
+import { I18nService } from '../../../../core/services/i18n.service';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { StarRatingComponent } from '../../../../shared/components/star-rating/star-rating.component';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
@@ -24,12 +25,77 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <article class="card">
-      <div class="cover" [style.--cover-from]="palet().from" [style.--cover-to]="palet().to">
+    <article class="card" [attr.data-lang]="i18n.dil()" [class.expanded]="acik()">
+      <!-- Kapak alanı — tıklayınca detaylar açılır -->
+      <div
+        class="cover"
+        [style.--cover-from]="palet().from"
+        [style.--cover-to]="palet().to"
+        (click)="detayAc()"
+        role="button"
+        [attr.aria-expanded]="acik()"
+      >
         <span class="spine"></span>
         <span class="initials">{{ bashHarfler() }}</span>
         <div class="cover-status">
           <app-status-badge [durum]="kitap().durum" />
+        </div>
+        <!-- Hover/detay chip -->
+        <div class="cover-overlay">
+          <span class="details-chip">
+            <span class="material-icons">{{ acik() ? 'expand_less' : 'info_outline' }}</span>
+            {{ acik() ? ('card.hideDetails' | translate) : ('card.showDetails' | translate) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Detay paneli (genişleyerek açılır) -->
+      <div class="details-panel" [class.open]="acik()">
+        <div class="details-inner">
+          <div class="details-row">
+            @if (kitap().tur) {
+              <div class="detail-item">
+                <span class="detail-icon material-icons">category</span>
+                <div>
+                  <span class="detail-label">{{ 'card.genre' | translate }}</span>
+                  <span class="detail-value">{{ kitap().tur }}</span>
+                </div>
+              </div>
+            }
+            @if (kitap().sayfaSayisi) {
+              <div class="detail-item">
+                <span class="detail-icon material-icons">description</span>
+                <div>
+                  <span class="detail-label">{{ 'card.pagesLabel' | translate }}</span>
+                  <span class="detail-value">{{ 'card.pages' | translate: { count: kitap().sayfaSayisi! } }}</span>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="details-row">
+            <div class="detail-item">
+              <span class="detail-icon material-icons">star</span>
+              <div>
+                <span class="detail-label">{{ 'card.ratingLabel' | translate }}</span>
+                <app-star-rating [value]="kitap().puan" [showValue]="true" />
+              </div>
+            </div>
+            @if (kitap().baslamaTarihi) {
+              <div class="detail-item">
+                <span class="detail-icon material-icons">event</span>
+                <div>
+                  <span class="detail-label">{{ 'card.startedLabel' | translate }}</span>
+                  <span class="detail-value">{{ kitap().baslamaTarihi | date: 'dd.MM.yyyy' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+          @if (kitap().not) {
+            <div class="detail-note">
+              <span class="material-icons">notes</span>
+              <p>{{ kitap().not }}</p>
+            </div>
+          }
         </div>
       </div>
 
@@ -55,13 +121,6 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         <div class="rating-row">
           <app-star-rating [value]="kitap().puan" [showValue]="true" />
         </div>
-
-        @if (kitap().baslamaTarihi) {
-          <p class="started">
-            <span class="material-icons">event</span>
-            {{ 'card.started' | translate: { date: (kitap().baslamaTarihi | date: 'dd.MM.yyyy') ?? '' } }}
-          </p>
-        }
 
         @if (kitap().not) {
           <p class="note">{{ kitap().not | truncate: 90 }}</p>
@@ -102,6 +161,13 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         box-shadow: var(--shadow-lg);
         border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-border));
       }
+      .card.expanded {
+        border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+      }
+
+      /* Kapak */
       .cover {
         position: relative;
         height: 132px;
@@ -110,6 +176,8 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
       }
       .spine {
         position: absolute;
@@ -124,6 +192,12 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         color: rgba(255, 255, 255, 0.9);
         letter-spacing: -0.03em;
         text-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        transition: transform 280ms var(--ease), opacity 280ms var(--ease);
+        pointer-events: none;
+      }
+      .card.expanded .initials {
+        transform: scale(0.82);
+        opacity: 0.55;
       }
       .cover-status {
         position: absolute;
@@ -133,6 +207,128 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         padding: 2px;
         backdrop-filter: blur(4px);
       }
+
+      /* Hover overlay */
+      .cover-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 12px;
+        transition: background 220ms var(--ease);
+        pointer-events: none;
+      }
+      .cover:hover .cover-overlay {
+        background: rgba(0, 0, 0, 0.28);
+      }
+      .card.expanded .cover-overlay {
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .details-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255, 255, 255, 0.94);
+        color: #1a1a2e;
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 5px 13px;
+        border-radius: var(--radius-full);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+        transform: translateY(10px);
+        opacity: 0;
+        transition: opacity 220ms var(--ease), transform 220ms var(--ease);
+        white-space: nowrap;
+        letter-spacing: 0.01em;
+      }
+      .details-chip .material-icons { font-size: 14px; }
+      .cover:hover .details-chip,
+      .card.expanded .details-chip {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Detay paneli */
+      .details-panel {
+        max-height: 0;
+        overflow: hidden;
+        background: color-mix(in srgb, var(--color-primary) 6%, var(--color-card));
+        transition: max-height 380ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .details-panel.open {
+        max-height: 300px;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .details-inner {
+        padding: 14px 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .details-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .detail-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        flex: 1;
+        min-width: 100px;
+      }
+      .detail-icon {
+        font-size: 16px;
+        color: var(--color-primary);
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      .detail-item > div {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+      .detail-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--color-text-subtle);
+      }
+      .detail-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .detail-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--color-border);
+      }
+      .detail-note .material-icons {
+        font-size: 15px;
+        color: var(--color-text-subtle);
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .detail-note p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--color-text-muted);
+        font-style: italic;
+      }
+
+      /* Body */
       .body {
         padding: var(--space-4) var(--space-4) var(--space-3);
         display: flex;
@@ -179,16 +375,6 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
       }
       .pages .material-icons { font-size: 15px; color: var(--color-text-subtle); }
       .rating-row { display: flex; align-items: center; }
-      .started {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin: 0;
-        font-size: 12.5px;
-        font-weight: 500;
-        color: var(--color-text-muted);
-      }
-      .started .material-icons { font-size: 15px; color: var(--color-text-subtle); }
       .note {
         margin: 0;
         font-size: 12.5px;
@@ -222,10 +408,15 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
   ],
 })
 export class BookCardComponent {
+  /** Dil signal'i template'de okunarak dil değişiminde çevirilerin güncellenmesini sağlar. */
+  readonly i18n = inject(I18nService);
   readonly kitap = input.required<Kitap>();
 
   readonly duzenle = output<Kitap>();
   readonly sil = output<Kitap>();
+
+  /** Detay panelinin açık/kapalı durumu */
+  readonly acik = signal(false);
 
   private static readonly PALETLER = [
     { from: '#6366f1', to: '#8b5cf6' },
@@ -252,4 +443,8 @@ export class BookCardComponent {
     const kelimeler = this.kitap().ad.trim().split(/\s+/).filter(Boolean);
     return kelimeler.slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
   });
+
+  detayAc(): void {
+    this.acik.update((v) => !v);
+  }
 }

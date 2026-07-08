@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -145,6 +145,50 @@ export class BooksListComponent {
       this.turFiltresi() !== 'hepsi',
   );
 
+  // --- Sayfalama -----------------------------------------------------------
+  private readonly SAYFA_BOYUTU = 12;
+  readonly sayfa = signal(1);
+
+  readonly toplamSayfa = computed(() =>
+    Math.max(1, Math.ceil(this.gorunenKitaplar().length / this.SAYFA_BOYUTU)),
+  );
+
+  /** O anki sayfaya düşen kitaplar (grid ve tablo bunu kullanır). */
+  readonly sayfaliKitaplar = computed<Kitap[]>(() => {
+    const bas = (this.sayfa() - 1) * this.SAYFA_BOYUTU;
+    return this.gorunenKitaplar().slice(bas, bas + this.SAYFA_BOYUTU);
+  });
+
+  /** Gösterilecek sayfa numaraları; çok sayfa varsa "…" ile kısaltır. */
+  readonly sayfaNumaralari = computed<(number | '...')[]>(() => {
+    const toplam = this.toplamSayfa();
+    const aktif = this.sayfa();
+    if (toplam <= 7) {
+      return Array.from({ length: toplam }, (_, i) => i + 1);
+    }
+    const gorunur = new Set<number>([1, toplam, aktif, aktif - 1, aktif + 1]);
+    const nums = [...gorunur].filter((n) => n >= 1 && n <= toplam).sort((a, b) => a - b);
+    const sonuc: (number | '...')[] = [];
+    let onceki = 0;
+    for (const n of nums) {
+      if (n - onceki > 1) sonuc.push('...');
+      sonuc.push(n);
+      onceki = n;
+    }
+    return sonuc;
+  });
+
+  constructor() {
+    // Arama / filtre / sıralama değişince ilk sayfaya dön.
+    effect(() => {
+      this.arama();
+      this.durumFiltresi();
+      this.turFiltresi();
+      this.siralama();
+      this.sayfa.set(1);
+    });
+  }
+
   /** Mevcut kitaplarda gerçekten bulunan türler (alfabetik). */
   readonly mevcutTurler = computed(() => {
     const set = new Set<string>();
@@ -241,6 +285,16 @@ export class BooksListComponent {
     this.arama.set('');
     this.durumFiltresi.set('hepsi');
     this.turFiltresi.set('hepsi');
+  }
+
+  sayfaSec(n: number): void {
+    const hedef = Math.min(Math.max(1, n), this.toplamSayfa());
+    if (hedef === this.sayfa()) return;
+    this.sayfa.set(hedef);
+    // Sayfa değişince içerik en üstten başlasın.
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   private bildir(mesaj: string): void {

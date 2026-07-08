@@ -31,7 +31,7 @@ ng build
 
 | Rota | Açıklama |
 | --- | --- |
-| `/kitaplar` | Tüm kitapların listelendiği ekran (arama, filtre, sıralama, kart/tablo görünümü). |
+| `/kitaplar` | Tüm kitapların listelendiği ekran (arama, filtre, sıralama, kart/tablo görünümü, sayfalama). |
 | `/kitaplar/ekle` | Yeni kitap ekleme formu (reactive form). |
 | `/kitaplar/:id/duzenle` | Mevcut kitabı düzenleme formu. |
 
@@ -58,14 +58,14 @@ src/app/
 │   ├── components/
 │   │   ├── data-table/           # generic, sıralanabilir ortak tablo
 │   │   ├── confirm-dialog/       # ortak "Emin misiniz?" modalı
-│   │   ├── form-field/           # etiket + input + hata mesajı
+│   │   ├── form-field/           # etiket + input + hata mesajı + karakter sayacı
 │   │   ├── empty-state/          # boş durum
 │   │   ├── loading-spinner/      # yükleniyor göstergesi
 │   │   ├── star-rating/          # 1–5 yıldız puanlama
 │   │   ├── status-badge/         # okuma durumu rozeti
 │   │   └── language-switcher/    # TR/EN dil değiştirici
 │   ├── pipes/
-│   │   ├── translate.pipe.ts     # i18n çeviri pipe'ı
+│   │   ├── translate.pipe.ts     # i18n çeviri pipe'ı (OnPush uyumlu)
 │   │   └── truncate.pipe.ts      # metin kısaltma pipe'ı
 │   ├── directives/
 │   │   └── status-color.directive.ts  # durum rengini uygulayan directive
@@ -74,10 +74,10 @@ src/app/
 └── features/
     └── books/
         ├── pages/
-        │   ├── books-list/       # liste sayfası (computed signal filtre/sıralama)
+        │   ├── books-list/       # liste sayfası (computed signal filtre/sıralama/sayfalama)
         │   └── books-form/       # ekleme/düzenleme formu
         ├── components/
-        │   └── book-card/        # kitap kartı
+        │   └── book-card/        # kitap kartı (tıklanınca detay paneli açılır)
         ├── services/
         │   └── books.service.ts  # RxJS BehaviorSubject + CRUD
         ├── models/
@@ -132,7 +132,7 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 ### Özel yapı taşları (nerede kullanıldı)
 
 - **Custom Pipe (2):**
-  - `translate` — i18n çevirisi (`shared/pipes/translate.pipe.ts`). Örn. `{{ 'shelf.title' | translate }}`. Neredeyse tüm şablonlarda kullanılır.
+  - `translate` — i18n çevirisi (`shared/pipes/translate.pipe.ts`). `ChangeDetectorRef` + `effect()` ile `OnPush` bileşenlerinde dil değişimini anında yansıtır. Neredeyse tüm şablonlarda kullanılır.
   - `truncate` — metin kısaltma (`shared/pipes/truncate.pipe.ts`).
 - **Custom Directive:** `appStatusColor` — okuma durumu rozetini renklendirir (`shared/directives/status-color.directive.ts`). `status-badge` bileşeninde kullanılır.
 - **Custom Validator (3):** `noWhitespaceValidator`, `numberRangeValidator` ve `notFutureDateValidator` (`shared/validators/custom-validators.ts`). Form'da ad/yazar, sayfa sayısı ve başlama tarihi alanlarında kullanılır (başlama tarihi gelecekte olamaz).
@@ -153,6 +153,7 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 - Bağımlılık eklemeden, **signal tabanlı** hafif bir çeviri servisiyle (`I18nService`) sağlanır.
 - Tüm metinler `core/services/translations.ts` içinde `tr` ve `en` altında tutulur.
 - Navbar'daki dil değiştiriciden anında geçiş yapılır; seçim `localStorage`'da saklanır.
+- `TranslatePipe`, `ChangeDetectorRef` + `effect()` kombinasyonu sayesinde `OnPush` change detection stratejisiyle çalışan tüm bileşenlerde dil değişimini doğru yansıtır.
 
 ---
 
@@ -160,9 +161,13 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 
 - Tam CRUD akışı (ekle / listele / düzenle / sil)
 - Kart **ve** tablo görünümü arasında geçiş
+- **Sayfalama** — kitap listesi sayfa başına 12 kitap gösterir, akıllı sayfa numaraları (elips ile kısaltma)
+- **Kitap kartı detay paneli** — kart kapağına tıklayınca animasyonlu slide-down panel açılır (tür, sayfa, puan, başlama tarihi, notlar)
+- **Notlar karakter sayacı** — form sayfasında not alanında anlık karakter sayısı gösterimi (500 karakter limiti)
 - Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
 - 1–5 yıldız puanlama ve **başlama tarihi** (gelecek tarih engellenir)
 - **Açık / koyu tema (dark mode)** — navbar'dan geçiş, tercih localStorage'da saklanır
 - Form doğrulama: alan bazlı hata mesajları + geçersiz gönderimde genel uyarı
 - Boş durum, "sonuç yok" durumu ve yükleniyor göstergesi
 - Responsive, modern ve minimal arayüz (Angular Material)
+- Uygulama favicon ve sekme başlığı özelleştirilmiş (`Kitaplığım`)

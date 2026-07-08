@@ -21,15 +21,24 @@ import { I18nService } from '../../../core/services/i18n.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="field" [class.has-error]="showError()">
-      @if (label()) {
-        <label class="label">
-          {{ label() }}
-          @if (required()) {
-            <span class="req">*</span>
-          } @else if (optionalLabel()) {
-            <span class="opt">{{ optionalLabel() }}</span>
+      @if (label() || maxChars()) {
+        <div class="label-row">
+          @if (label()) {
+            <label class="label">
+              {{ label() }}
+              @if (required()) {
+                <span class="req">*</span>
+              } @else if (optionalLabel()) {
+                <span class="opt">{{ optionalLabel() }}</span>
+              }
+            </label>
           }
-        </label>
+          @if (maxChars()) {
+            <span class="counter" [class.counter-full]="karakterSayisi() >= maxChars()!">
+              {{ karakterSayisi() }} / {{ maxChars() }}
+            </span>
+          }
+        </div>
       }
 
       <div class="control"><ng-content></ng-content></div>
@@ -46,12 +55,26 @@ import { I18nService } from '../../../core/services/i18n.service';
   styles: [
     `
       .field { display: flex; flex-direction: column; }
+      .label-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-2);
+        margin-bottom: var(--space-2);
+      }
       .label {
         font-size: 13px;
         font-weight: 600;
         color: var(--color-text);
-        margin-bottom: var(--space-2);
       }
+      .counter {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-text-subtle);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .counter-full { color: var(--color-warning); font-weight: 600; }
       .req { color: var(--color-danger); margin-left: 2px; }
       .opt { color: var(--color-text-subtle); font-weight: 400; margin-left: 4px; }
       .control { display: flex; flex-direction: column; }
@@ -81,6 +104,8 @@ export class FormFieldComponent {
   readonly required = input<boolean>(false);
   readonly optionalLabel = input<string>('');
   readonly hint = input<string>('');
+  /** Verilirse etiketin sağında "kullanılan / maxChars" sayacı gösterilir. */
+  readonly maxChars = input<number | null>(null);
 
   /**
    * AbstractControl'ün touched/invalid/errors alanları normal (sinyal
@@ -100,6 +125,13 @@ export class FormFieldComponent {
       onCleanup(() => sub.unsubscribe());
     });
   }
+
+  /** Kontrol değerinin karakter sayısı (value değişince tick ile güncellenir). */
+  readonly karakterSayisi = computed(() => {
+    this.tick();
+    const v = this.control()?.value;
+    return typeof v === 'string' ? v.length : 0;
+  });
 
   readonly showError = computed(() => {
     this.tick();

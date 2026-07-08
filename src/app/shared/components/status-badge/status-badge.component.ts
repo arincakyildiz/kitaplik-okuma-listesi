@@ -1,21 +1,23 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { OkumaDurumu } from '../../../features/books/models/book.model';
+import { I18nService } from '../../../core/services/i18n.service';
 import { StatusColorDirective } from '../../directives/status-color.directive';
-import { TranslatePipe } from '../../pipes/translate.pipe';
 
 /**
  * Okuma durumu rozeti. Renklendirmeyi custom `appStatusColor`
- * directive'i, metni ise `translate` pipe'ı yapar.
+ * directive'i yapar. Etiket, dil signal'ini okuyan bir computed ile
+ * üretilir — böylece OnPush bileşen dil değiştiğinde de güncellenir
+ * (translate pipe OnPush bileşende dil değişimini tetiklemiyordu).
  */
 @Component({
   selector: 'app-status-badge',
   standalone: true,
-  imports: [StatusColorDirective, TranslatePipe],
+  imports: [StatusColorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <span class="badge" appStatusColor [durum]="durum()">
       <span class="dot"></span>
-      {{ 'status.' + durum() | translate }}
+      {{ etiket() }}
     </span>
   `,
   styles: [
@@ -44,5 +46,11 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   ],
 })
 export class StatusBadgeComponent {
+  private readonly i18n = inject(I18nService);
   readonly durum = input.required<OkumaDurumu>();
+
+  readonly etiket = computed(() => {
+    this.i18n.dil(); // dil signal'ini okuyarak reaktif ol
+    return this.i18n.t('status.' + this.durum());
+  });
 }

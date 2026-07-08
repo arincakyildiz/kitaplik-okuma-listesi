@@ -211,12 +211,12 @@
 
       @if (gorunum() === 'kart') {
         <div class="grid">
-          @for (kitap of gorunenKitaplar(); track kitap.id) {
+          @for (kitap of sayfaliKitaplar(); track kitap.id) {
             <app-book-card [kitap]="kitap" (duzenle)="duzenle($event)" (sil)="silOnayla($event)" />
           }
         </div>
       } @else {
-        <app-data-table [data]="gorunenKitaplar()" [columns]="kolonlar()" trackKey="id">
+        <app-data-table [data]="sayfaliKitaplar()" [columns]="kolonlar()" trackKey="id">
           <ng-template #cell let-kitap let-col="col">
             @switch (col.key) {
               @case ('ad') { <span class="cell-strong">{{ kitap.ad }}</span> }
@@ -238,6 +238,44 @@
             }
           </ng-template>
         </app-data-table>
+      }
+
+      <!-- Sayfalama -->
+      @if (toplamSayfa() > 1) {
+        <nav class="pagination" [attr.aria-label]="'pagination.label' | translate">
+          <button
+            class="page-btn page-nav"
+            [disabled]="sayfa() === 1"
+            (click)="sayfaSec(sayfa() - 1)"
+            [attr.aria-label]="'pagination.prev' | translate"
+          >
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          @for (n of sayfaNumaralari(); track $index) {
+            @if (n === '...') {
+              <span class="page-ellipsis">…</span>
+            } @else {
+              <button
+                class="page-btn"
+                [class.active]="n === sayfa()"
+                [attr.aria-current]="n === sayfa() ? 'page' : null"
+                (click)="sayfaSec($any(n))"
+              >
+                {{ n }}
+              </button>
+            }
+          }
+
+          <button
+            class="page-btn page-nav"
+            [disabled]="sayfa() === toplamSayfa()"
+            (click)="sayfaSec(sayfa() + 1)"
+            [attr.aria-label]="'pagination.next' | translate"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </nav>
       }
     }
   </main>

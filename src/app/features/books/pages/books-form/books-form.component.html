@@ -25,8 +25,8 @@
 
       <form [formGroup]="form" (ngSubmit)="kaydet()" class="body">
         <!-- Ad -->
-        <app-form-field [label]="'form.name' | translate" [control]="form.controls.ad" [required]="true">
-          <input class="app-input" type="text" formControlName="ad" [placeholder]="'form.namePlaceholder' | translate" maxlength="120" />
+        <app-form-field [label]="'form.name' | translate" [control]="form.controls.ad" [required]="true" [maxChars]="100">
+          <input class="app-input" type="text" formControlName="ad" [placeholder]="'form.namePlaceholder' | translate" maxlength="100" />
         </app-form-field>
 
         <div class="grid-2">
@@ -107,7 +107,7 @@
         </app-form-field>
 
         <!-- Not -->
-        <app-form-field [label]="'form.notes' | translate" [optionalLabel]="'form.optional' | translate">
+        <app-form-field [label]="'form.notes' | translate" [optionalLabel]="'form.optional' | translate" [control]="form.controls.not" [maxChars]="500">
           <textarea class="app-input app-textarea" formControlName="not" rows="3" maxlength="500" [placeholder]="'form.notesPlaceholder' | translate"></textarea>
         </app-form-field>
 
