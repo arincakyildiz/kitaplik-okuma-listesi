@@ -20,10 +20,12 @@ html {
   ));
 
   // Align Material's system tokens with our brand palette
-  --mat-sys-primary: #4f46e5;
-  --mat-sys-on-primary: #ffffff;
-  --mat-sys-tertiary: #10b981;
-  --mat-sys-error: #ef4444;
+  & {
+    --mat-sys-primary: #4f46e5;
+    --mat-sys-on-primary: #ffffff;
+    --mat-sys-tertiary: #10b981;
+    --mat-sys-error: #ef4444;
+  }
 }
 
 // ---------------------------------------------------------------------------
