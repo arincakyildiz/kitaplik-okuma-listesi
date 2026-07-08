@@ -41,7 +41,7 @@
               <select class="app-input app-select" formControlName="tur">
                 <option value="">{{ 'form.selectGenre' | translate }}</option>
                 @for (t of turler; track t) {
-                  <option [value]="t">{{ t }}</option>
+                  <option [value]="t">{{ 'genre.' + t | translate }}</option>
                 }
               </select>
               <span class="material-icons select-chev">expand_more</span>

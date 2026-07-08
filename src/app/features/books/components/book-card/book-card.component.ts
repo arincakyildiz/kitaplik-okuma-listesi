@@ -58,7 +58,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
                 <span class="detail-icon material-icons">category</span>
                 <div>
                   <span class="detail-label">{{ 'card.genre' | translate }}</span>
-                  <span class="detail-value">{{ kitap().tur }}</span>
+                  <span class="detail-value">{{ 'genre.' + kitap().tur | translate }}</span>
                 </div>
               </div>
             }
@@ -107,7 +107,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
 
         <div class="meta">
           @if (kitap().tur) {
-            <span class="genre">{{ kitap().tur }}</span>
+            <span class="genre">{{ 'genre.' + kitap().tur | translate }}</span>
           } @else {
             <span></span>
           }

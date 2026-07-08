@@ -201,7 +201,7 @@ export class BooksListComponent {
   readonly turFiltreEtiketi = computed(() => {
     this.i18n.dil();
     const t = this.turFiltresi();
-    return t === 'hepsi' ? this.i18n.t('toolbar.allGenres') : t;
+    return t === 'hepsi' ? this.i18n.t('toolbar.allGenres') : this.i18n.t('genre.' + t);
   });
 
   // --- Tablo kolonları (i18n başlıklar) ------------------------------------

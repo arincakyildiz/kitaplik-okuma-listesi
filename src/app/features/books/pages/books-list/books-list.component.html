@@ -124,7 +124,7 @@
               } @else {
                 <mat-icon>label_outline</mat-icon>
               }
-              <span>{{ t }}</span>
+              <span>{{ 'genre.' + t | translate }}</span>
             </button>
           }
         </mat-menu>
@@ -223,7 +223,7 @@
               @case ('durum') { <app-status-badge [durum]="kitap.durum" /> }
               @case ('puan') { <app-star-rating [value]="kitap.puan" [showValue]="false" /> }
               @case ('sayfaSayisi') { <span>{{ kitap.sayfaSayisi || '—' }}</span> }
-              @case ('tur') { <span>{{ kitap.tur || '—' }}</span> }
+              @case ('tur') { <span>{{ kitap.tur ? ('genre.' + kitap.tur | translate) : '—' }}</span> }
               @case ('islemler') {
                 <div class="row-actions">
                   <button mat-icon-button (click)="duzenle(kitap)" [matTooltip]="'card.edit' | translate">

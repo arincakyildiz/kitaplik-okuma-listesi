@@ -138,6 +138,22 @@ export const CEVIRILER: Ceviriler = {
 
     'theme.toDark': 'Koyu temaya geç',
     'theme.toLight': 'Açık temaya geç',
+
+    // Türler (Genres)
+    'genre.Roman': 'Roman',
+    'genre.Bilim Kurgu': 'Bilim Kurgu',
+    'genre.Fantastik': 'Fantastik',
+    'genre.Polisiye': 'Polisiye',
+    'genre.Gerilim': 'Gerilim',
+    'genre.Tarih': 'Tarih',
+    'genre.Biyografi': 'Biyografi',
+    'genre.Kişisel Gelişim': 'Kişisel Gelişim',
+    'genre.İş / Ekonomi': 'İş / Ekonomi',
+    'genre.Bilim': 'Bilim',
+    'genre.Felsefe': 'Felsefe',
+    'genre.Şiir': 'Şiir',
+    'genre.Çocuk': 'Çocuk',
+    'genre.Diğer': 'Diğer',
   },
   en: {
     'app.title': 'My Library',
@@ -271,5 +287,21 @@ export const CEVIRILER: Ceviriler = {
 
     'theme.toDark': 'Switch to dark theme',
     'theme.toLight': 'Switch to light theme',
+
+    // Türler (Genres)
+    'genre.Roman': 'Novel',
+    'genre.Bilim Kurgu': 'Science Fiction',
+    'genre.Fantastik': 'Fantasy',
+    'genre.Polisiye': 'Mystery',
+    'genre.Gerilim': 'Thriller',
+    'genre.Tarih': 'History',
+    'genre.Biyografi': 'Biography',
+    'genre.Kişisel Gelişim': 'Personal Development',
+    'genre.İş / Ekonomi': 'Business / Economics',
+    'genre.Bilim': 'Science',
+    'genre.Felsefe': 'Philosophy',
+    'genre.Şiir': 'Poetry',
+    'genre.Çocuk': 'Children',
+    'genre.Diğer': 'Other',
   },
 };
