@@ -406,6 +406,27 @@ export class BooksListComponent {
       }
     });
   }
+  kutuphaneyiTemizleOnayla(): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: this.i18n.t('toolbar.clearLibrary'),
+        message: this.i18n.t('toolbar.clearLibraryConfirm'),
+        confirmText: this.i18n.t('confirm.yes'),
+        cancelText: this.i18n.t('confirm.cancel'),
+        danger: true,
+      },
+      panelClass: 'app-dialog',
+      autoFocus: false,
+      maxWidth: '96vw',
+    });
+
+    ref.afterClosed().subscribe((onay) => {
+      if (onay) {
+        this.books.kutuphaneyiTemizle();
+        this.bildir(this.i18n.t('toolbar.clearLibrarySuccess'));
+      }
+    });
+  }
   filtreTemizle(): void {
     this.arama.set('');
     this.durumFiltresi.set('hepsi');

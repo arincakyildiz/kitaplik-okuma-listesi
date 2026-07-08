@@ -204,6 +204,9 @@ export const CEVIRILER: Ceviriler = {
     'toolbar.loadSamples': 'Örnek Verileri Yükle',
     'toolbar.loadSamplesConfirm': 'Kütüphanenizdeki mevcut veriler silinecek ve 30 adet örnek kitap yüklenecektir. Devam etmek istiyor musunuz?',
     'toolbar.loadSamplesSuccess': '30 adet örnek kitap başarıyla yüklendi!',
+    'toolbar.clearLibrary': 'Kütüphaneyi Temizle',
+    'toolbar.clearLibraryConfirm': 'Kütüphanenizdeki tüm kitaplar silinecektir. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?',
+    'toolbar.clearLibrarySuccess': 'Kütüphaneniz başarıyla temizlendi!',
   },
   en: {
     'app.title': 'My Library',
@@ -403,5 +406,8 @@ export const CEVIRILER: Ceviriler = {
     'toolbar.loadSamples': 'Load Sample Data',
     'toolbar.loadSamplesConfirm': 'All current data in your library will be deleted and 30 sample books will be loaded. Do you want to proceed?',
     'toolbar.loadSamplesSuccess': '30 sample books loaded successfully!',
+    'toolbar.clearLibrary': 'Clear Library',
+    'toolbar.clearLibraryConfirm': 'All books in your library will be deleted. This action cannot be undone. Do you want to proceed?',
+    'toolbar.clearLibrarySuccess': 'Library cleared successfully!',
   },
 };

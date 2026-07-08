@@ -33,6 +33,10 @@
             <mat-icon>restore</mat-icon>
             <span>{{ 'toolbar.loadSamples' | translate }}</span>
           </button>
+          <button mat-menu-item (click)="kutuphaneyiTemizleOnayla()">
+            <mat-icon>delete_sweep</mat-icon>
+            <span>{{ 'toolbar.clearLibrary' | translate }}</span>
+          </button>
         </mat-menu>
         <input #fileInput type="file" (change)="veriIceAktar($event)" accept=".json" style="display: none;" />
 

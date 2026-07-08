@@ -140,6 +140,12 @@ export class BooksService {
     this.hedefGuncelle(20);
   }
 
+  /** Kütüphanedeki tüm kitapları siler (sıfırlar). */
+  kutuphaneyiTemizle(): void {
+    this.yayinla([]);
+    this.hedefGuncelle(20);
+  }
+
   // --- CRUD ----------------------------------------------------------------
   ekle(form: KitapFormModel): Kitap {
     const simdi = new Date().toISOString();
