@@ -102,7 +102,7 @@ export class BooksListComponent {
       .reduce((sum, k) => sum + (k.sayfaSayisi || 0), 0);
   });
 
-  readonly puanOrtalaması = computed(() => {
+  readonly puanOrtalamasi = computed(() => {
     const rated = this.kitaplar().filter((k) => k.puan && k.puan > 0);
     if (rated.length === 0) return 0;
     return rated.reduce((sum, k) => sum + (k.puan || 0), 0) / rated.length;

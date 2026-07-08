@@ -72,8 +72,8 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
                   <span class="detail-value">
                     {{ 'card.progressValue' | translate: { current: kitap().kalinanSayfa!, total: kitap().sayfaSayisi || 0, percent: okumaYuzdesi() } }}
                   </span>
-                  @if (kalanSüre()) {
-                    <span class="detail-time-hint">{{ kalanSüre() }}</span>
+                  @if (kalanSure()) {
+                    <span class="detail-time-hint">{{ kalanSure() }}</span>
                   }
                 </div>
               </div>
@@ -711,7 +711,7 @@ export class BookCardComponent {
     return Math.min(100, Math.round((k.kalinanSayfa / k.sayfaSayisi) * 100));
   });
 
-  readonly kalanSüre = computed(() => {
+  readonly kalanSure = computed(() => {
     const k = this.kitap();
     if (k.durum !== 'okunuyor' || !k.sayfaSayisi || !k.kalinanSayfa) return '';
     const kalanSayfa = Math.max(0, k.sayfaSayisi - k.kalinanSayfa);
