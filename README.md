@@ -49,6 +49,7 @@ src/app/
 │   ├── services/
 │   │   ├── storage.service.ts    # localStorage'a TEK erişim noktası
 │   │   ├── i18n.service.ts       # signal tabanlı TR/EN çeviri servisi
+│   │   ├── theme.service.ts      # açık/koyu tema (dark mode) servisi
 │   │   └── translations.ts       # tr/en çeviri sözlüğü
 │   ├── guards/
 │   │   └── unsaved-changes.guard.ts   # canDeactivate guard
@@ -63,7 +64,8 @@ src/app/
 │   │   ├── loading-spinner/      # yükleniyor göstergesi
 │   │   ├── star-rating/          # 1–5 yıldız puanlama
 │   │   ├── status-badge/         # okuma durumu rozeti
-│   │   └── language-switcher/    # TR/EN dil değiştirici
+│   │   ├── language-switcher/    # TR/EN dil değiştirici
+│   │   └── theme-toggle/         # açık/koyu tema değiştirici
 │   ├── pipes/
 │   │   ├── translate.pipe.ts     # i18n çeviri pipe'ı (OnPush uyumlu)
 │   │   └── truncate.pipe.ts      # metin kısaltma pipe'ı
@@ -96,6 +98,17 @@ src/app/
 ```ts
 type OkumaDurumu = 'okunacak' | 'okunuyor' | 'okundu';
 
+interface Alinti {
+  metin: string;
+  sayfa?: number;
+}
+
+interface TimelineLog {
+  tarih: string;           // ISO string
+  mesaj: string;           // i18n anahtarı (örn. 'timeline.completed')
+  deger?: string | number;
+}
+
 interface Kitap {
   id: number;
   ad: string;              // zorunlu
@@ -103,8 +116,12 @@ interface Kitap {
   tur?: string;
   durum: OkumaDurumu;      // zorunlu
   sayfaSayisi?: number;
+  kalinanSayfa?: number;   // okuma ilerlemesi (yalnızca 'okunuyor')
   puan?: number;           // 1–5
   not?: string;
+  baslamaTarihi?: string;  // ISO tarih (yyyy-mm-dd) — gelecekte olamaz
+  alintilar?: Alinti[];    // kitaptan alıntılar
+  timeline?: TimelineLog[]; // okuma günlüğü (oluşturuldu / durum değişti / sayfa güncellendi / tamamlandı)
   eklenmeTarihi: string;   // ISO tarih
 }
 ```
@@ -162,7 +179,12 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 - Tam CRUD akışı (ekle / listele / düzenle / sil)
 - Kart **ve** tablo görünümü arasında geçiş
 - **Sayfalama** — kitap listesi sayfa başına 12 kitap gösterir, akıllı sayfa numaraları (elips ile kısaltma)
-- **Kitap kartı detay paneli** — kart kapağına tıklayınca animasyonlu slide-down panel açılır (tür, sayfa, puan, başlama tarihi, notlar)
+- **Kitap kartı detay paneli** — kart kapağına tıklayınca animasyonlu slide-down panel açılır (tür, sayfa, puan, başlama tarihi, notlar, alıntılar, okuma günlüğü)
+- **Okuma ilerlemesi** — "okunuyor" durumundaki kitaplarda kalınan sayfa takibi, ilerleme çubuğu ve tahmini kalan okuma süresi
+- **Alıntılar** — kitaba birden fazla alıntı (sayfa numarasıyla) eklenebilir, kart detayında listelenir
+- **Okuma günlüğü (timeline)** — kitap oluşturma, durum değişikliği, sayfa güncellemesi ve tamamlanma anları otomatik kaydedilir
+- **Dashboard / istatistikler** — yıllık okuma hedefi ve ilerleme yüzdesi, toplam okunan sayfa, ortalama puan, favori tür, ortalama sayfa sayısı, "günün alıntısı"
+- **Yedekleme ve veri yönetimi** — kütüphaneyi JSON olarak dışa aktarma, JSON yedeğini içe aktarma, Excel uyumlu CSV (UTF-8 BOM) olarak dışa aktarma, örnek verileri yükleme ve kütüphaneyi tamamen temizleme (onay diyaloglu)
 - **Notlar karakter sayacı** — form sayfasında not alanında anlık karakter sayısı gösterimi (500 karakter limiti)
 - Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
 - 1–5 yıldız puanlama ve **başlama tarihi** (gelecek tarih engellenir)
@@ -171,3 +193,4 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 - Boş durum, "sonuç yok" durumu ve yükleniyor göstergesi
 - Responsive, modern ve minimal arayüz (Angular Material)
 - Uygulama favicon ve sekme başlığı özelleştirilmiş (`Kitaplığım`)
+- İlk açılışta örnek kitaplarla dolu bir kütüphane yalnızca `localhost` üzerinde gösterilir; üretim ortamında boş kütüphaneyle başlanır
