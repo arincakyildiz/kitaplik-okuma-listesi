@@ -17,6 +17,10 @@
           <mat-icon>settings_backup_restore</mat-icon>
         </button>
         <mat-menu #backupMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="veriDisaAktarExcel()">
+            <mat-icon>table_view</mat-icon>
+            <span>{{ 'toolbar.exportExcel' | translate }}</span>
+          </button>
           <button mat-menu-item (click)="veriDisaAktar()">
             <mat-icon>download</mat-icon>
             <span>{{ 'toolbar.export' | translate }}</span>

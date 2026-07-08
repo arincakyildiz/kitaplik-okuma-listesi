@@ -196,6 +196,7 @@ export const CEVIRILER: Ceviriler = {
     // Toolbar Ekstra
     'toolbar.backup': 'Veri Yedekleme / Yükleme',
     'toolbar.export': 'Verileri Dışa Aktar (JSON)',
+    'toolbar.exportExcel': 'Excel (CSV) Olarak Aktar',
     'toolbar.import': 'Yedek Dosyası Yükle',
     'toolbar.importSuccess': 'Veriler başarıyla içe aktarıldı!',
     'toolbar.importError': 'Geçersiz yedek dosyası!',
@@ -390,6 +391,7 @@ export const CEVIRILER: Ceviriler = {
     // Toolbar Extra
     'toolbar.backup': 'Data Backup / Restore',
     'toolbar.export': 'Export Data (JSON)',
+    'toolbar.exportExcel': 'Export to Excel (CSV)',
     'toolbar.import': 'Import Backup File',
     'toolbar.importSuccess': 'Backup imported successfully!',
     'toolbar.importError': 'Invalid backup file!',

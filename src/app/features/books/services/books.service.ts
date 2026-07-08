@@ -66,6 +66,49 @@ export class BooksService {
     dlAnchor.remove();
   }
 
+  /** Kütüphaneyi Excel (CSV) olarak indirir. */
+  disaAktarExcel(): void {
+    if (typeof window === 'undefined') return;
+    
+    const headers = [
+      'Kitap Adı',
+      'Yazar',
+      'Tür',
+      'Durum',
+      'Toplam Sayfa',
+      'Kalınan Sayfa',
+      'Puan',
+      'Notlar',
+      'Alıntı Sayısı',
+      'Eklenme Tarihi'
+    ];
+
+    const rows = this.kitaplar.map(k => [
+      `"${k.ad.replace(/"/g, '""')}"`,
+      `"${k.yazar.replace(/"/g, '""')}"`,
+      `"${(k.tur || '').replace(/"/g, '""')}"`,
+      `"${k.durum}"`,
+      k.sayfaSayisi || 0,
+      k.kalinanSayfa || 0,
+      k.puan || 0,
+      `"${(k.not || '').replace(/"/g, '""')}"`,
+      k.alintilar ? k.alintilar.length : 0,
+      k.eklenmeTarihi ? new Date(k.eklenmeTarihi).toLocaleDateString('tr-TR') : ''
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute('href', url);
+    dlAnchor.setAttribute('download', `kitaplik_liste_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
   /** JSON yedeğini yükler. */
   iceAktar(veriStr: string): boolean {
     try {

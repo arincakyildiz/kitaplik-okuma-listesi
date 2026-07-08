@@ -163,6 +163,10 @@ export class BooksListComponent {
     this.books.disaAktar();
   }
 
+  veriDisaAktarExcel(): void {
+    this.books.disaAktarExcel();
+  }
+
   veriIceAktar(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
