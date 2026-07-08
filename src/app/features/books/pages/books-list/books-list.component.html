@@ -222,7 +222,11 @@
               @case ('ad') { <span class="cell-strong">{{ kitap.ad }}</span> }
               @case ('durum') { <app-status-badge [durum]="kitap.durum" /> }
               @case ('puan') { <app-star-rating [value]="kitap.puan" [showValue]="false" /> }
-              @case ('sayfaSayisi') { <span>{{ kitap.sayfaSayisi || '—' }}</span> }
+              @case ('sayfaSayisi') {
+                <span>
+                  {{ kitap.durum === 'okunuyor' && kitap.kalinanSayfa ? (kitap.kalinanSayfa + ' / ' + kitap.sayfaSayisi) : (kitap.sayfaSayisi || '—') }}
+                </span>
+              }
               @case ('tur') { <span>{{ kitap.tur ? ('genre.' + kitap.tur | translate) : '—' }}</span> }
               @case ('islemler') {
                 <div class="row-actions">

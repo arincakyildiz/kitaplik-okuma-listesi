@@ -97,6 +97,7 @@ function ORNEK_KITAPLAR(): Kitap[] {
     sayfaSayisi: number,
     puan: number,
     not = '',
+    kalinanSayfa?: number,
   ): Kitap => ({
     id,
     ad,
@@ -106,16 +107,17 @@ function ORNEK_KITAPLAR(): Kitap[] {
     sayfaSayisi,
     puan,
     not,
+    kalinanSayfa,
     eklenmeTarihi: new Date(now - id * 8_000_000).toISOString(),
   });
 
   return [
     yap(20, 'Suç ve Ceza', 'Fyodor Dostoyevski', 'Roman', 'okundu', 687, 5, 'Raskolnikov karakteri unutulmaz.'),
-    yap(19, 'Sefiller', 'Victor Hugo', 'Roman', 'okunuyor', 1463, 4, ''),
+    yap(19, 'Sefiller', 'Victor Hugo', 'Roman', 'okunuyor', 1463, 4, '', 450),
     yap(18, 'Dune', 'Frank Herbert', 'Bilim Kurgu', 'okunacak', 688, 0, 'Filmden önce okunacak.'),
     yap(17, 'Sapiens', 'Yuval Noah Harari', 'Tarih', 'okundu', 443, 5, 'İnsanlığın kısa tarihi.'),
     yap(16, 'Hayvan Çiftliği', 'George Orwell', 'Roman', 'okundu', 152, 4, ''),
-    yap(15, 'Atomik Alışkanlıklar', 'James Clear', 'Kişisel Gelişim', 'okunuyor', 320, 4, 'Alışkanlık istifleme bölümündeyim.'),
+    yap(15, 'Atomik Alışkanlıklar', 'James Clear', 'Kişisel Gelişim', 'okunuyor', 320, 4, 'Alışkanlık istifleme bölümündeyim.', 120),
     yap(14, 'Otostopçunun Galaksi Rehberi', 'Douglas Adams', 'Bilim Kurgu', 'okunacak', 224, 0, ''),
     yap(13, 'Kürk Mantolu Madonna', 'Sabahattin Ali', 'Roman', 'okundu', 160, 5, ''),
     yap(12, 'Küçük Prens', 'Antoine de Saint-Exupéry', 'Klasik', 'okundu', 96, 5, 'Her yaştan insan okuyabilir.'),
@@ -127,7 +129,7 @@ function ORNEK_KITAPLAR(): Kitap[] {
     yap(6, '1984', 'George Orwell', 'Distopya', 'okundu', 328, 5, 'Big Brother sizi izliyor.'),
     yap(5, 'Don Kişot', 'Miguel de Cervantes', 'Klasik', 'okunacak', 992, 0, ''),
     yap(4, 'Siddhartha', 'Hermann Hesse', 'Felsefi', 'okundu', 152, 4, 'Aydınlanma yolculuğu.'),
-    yap(3, 'Böyle Buyurdu Zerdüşt', 'Friedrich Nietzsche', 'Felsefe', 'okunuyor', 352, 3, 'Ağır ama düşündürücü.'),
+    yap(3, 'Böyle Buyurdu Zerdüşt', 'Friedrich Nietzsche', 'Felsefe', 'okunuyor', 352, 3, 'Ağır ama düşündürücü.', 90),
     yap(2, 'Şeker Portakalı', 'José Mauro de Vasconcelos', 'Roman', 'okundu', 213, 5, 'Zezé\'nin masumiyeti yürek sızlatıyor.'),
     yap(1, 'Bülbülü Öldürmek', 'Harper Lee', 'Roman', 'okundu', 376, 5, 'Atticus Finch efsanevi bir kahraman.'),
   ];

@@ -81,6 +81,18 @@
             </div>
           </app-form-field>
 
+          <!-- Kaldığın Sayfa -->
+          @if (form.controls.durum.value === 'okunuyor' || form.controls.durum.value === 'okundu') {
+            <app-form-field [label]="'form.currentPage' | translate" [control]="form.controls.kalinanSayfa" [optionalLabel]="'form.optional' | translate">
+              <div class="input-suffix">
+                <input class="app-input" type="number" formControlName="kalinanSayfa" placeholder="0" min="0" max="20000" />
+                <span class="suffix">{{ 'form.pagesSuffix' | translate }}</span>
+              </div>
+            </app-form-field>
+          }
+        </div>
+
+        <div class="grid-2">
           <!-- Puan -->
           <app-form-field [label]="'form.rating' | translate" [optionalLabel]="'form.optional' | translate">
             <div class="rating-box">
@@ -94,17 +106,17 @@
               <span class="rating-hint">{{ puanEtiketi() }}</span>
             </div>
           </app-form-field>
-        </div>
 
-        <!-- Başlama tarihi -->
-        <app-form-field
-          [label]="'form.startDate' | translate"
-          [control]="form.controls.baslamaTarihi"
-          [optionalLabel]="'form.optional' | translate"
-          [hint]="'form.startDateHint' | translate"
-        >
-          <input class="app-input" type="date" formControlName="baslamaTarihi" [max]="bugunISO" />
-        </app-form-field>
+          <!-- Başlama tarihi -->
+          <app-form-field
+            [label]="'form.startDate' | translate"
+            [control]="form.controls.baslamaTarihi"
+            [optionalLabel]="'form.optional' | translate"
+            [hint]="'form.startDateHint' | translate"
+          >
+            <input class="app-input" type="date" formControlName="baslamaTarihi" [max]="bugunISO" />
+          </app-form-field>
+        </div>
 
         <!-- Not -->
         <app-form-field [label]="'form.notes' | translate" [optionalLabel]="'form.optional' | translate" [control]="form.controls.not" [maxChars]="500">

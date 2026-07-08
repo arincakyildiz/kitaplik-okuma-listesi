@@ -82,9 +82,19 @@ export class BooksFormComponent implements CanComponentDeactivate {
     tur: this.fb.nonNullable.control(''),
     durum: this.fb.nonNullable.control<OkumaDurumu>('okunacak', [Validators.required]),
     sayfaSayisi: this.fb.control<number | null>(null, [numberRangeValidator(1, 20000)]),
+    kalinanSayfa: this.fb.control<number | null>(null, [numberRangeValidator(0, 20000)]),
     puan: this.fb.nonNullable.control<number>(0),
     baslamaTarihi: this.fb.nonNullable.control('', [notFutureDateValidator()]),
     not: this.fb.nonNullable.control(''),
+  }, {
+    validators: (group) => {
+      const sayfa = group.get('sayfaSayisi')?.value;
+      const kalinan = group.get('kalinanSayfa')?.value;
+      if (sayfa !== null && kalinan !== null && kalinan > sayfa) {
+        group.get('kalinanSayfa')?.setErrors({ kalinanBuyuk: true });
+      }
+      return null;
+    }
   });
 
   /** Date input'un max değeri — bugünden ileri seçilemesin. */
@@ -108,6 +118,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
           tur: kitap.tur ?? '',
           durum: kitap.durum,
           sayfaSayisi: kitap.sayfaSayisi ?? null,
+          kalinanSayfa: kitap.kalinanSayfa ?? null,
           puan: kitap.puan ?? 0,
           baslamaTarihi: kitap.baslamaTarihi ?? '',
           not: kitap.not ?? '',
@@ -156,6 +167,7 @@ export class BooksFormComponent implements CanComponentDeactivate {
       tur: v.tur || undefined,
       durum: v.durum,
       sayfaSayisi: v.sayfaSayisi ?? undefined,
+      kalinanSayfa: v.kalinanSayfa ?? undefined,
       puan: v.puan || undefined,
       baslamaTarihi: v.baslamaTarihi || undefined,
       not: v.not.trim() || undefined,

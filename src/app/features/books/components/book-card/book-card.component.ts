@@ -36,6 +36,12 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         [attr.aria-expanded]="acik()"
       >
         <span class="spine"></span>
+        @if (kitap().durum === 'okunuyor' && kitap().kalinanSayfa) {
+          <div class="bookmark-ribbon" [matTooltip]="'card.progressLabel' | translate">
+            <span class="material-icons">bookmark</span>
+            <span class="ribbon-page">{{ kitap().kalinanSayfa }}</span>
+          </div>
+        }
         <span class="initials">{{ bashHarfler() }}</span>
         <div class="cover-status">
           <app-status-badge [durum]="kitap().durum" />
@@ -47,11 +53,32 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
             {{ acik() ? ('card.hideDetails' | translate) : ('card.showDetails' | translate) }}
           </span>
         </div>
+        @if (kitap().durum === 'okunuyor' && kitap().sayfaSayisi && kitap().kalinanSayfa) {
+          <div class="cover-progress-bar">
+            <span [style.width.%]="okumaYuzdesi()"></span>
+          </div>
+        }
       </div>
 
       <!-- Detay paneli (genişleyerek açılır) -->
       <div class="details-panel" [class.open]="acik()">
         <div class="details-inner">
+          @if (kitap().durum === 'okunuyor' && kitap().kalinanSayfa) {
+            <div class="detail-progress-section">
+              <div class="detail-item">
+                <span class="detail-icon material-icons">bookmark_border</span>
+                <div>
+                  <span class="detail-label">{{ 'card.progressLabel' | translate }}</span>
+                  <span class="detail-value">
+                    {{ 'card.progressValue' | translate: { current: kitap().kalinanSayfa!, total: kitap().sayfaSayisi || 0, percent: okumaYuzdesi() } }}
+                  </span>
+                </div>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="okumaYuzdesi()"></div>
+              </div>
+            </div>
+          }
           <div class="details-row">
             @if (kitap().tur) {
               <div class="detail-item">
@@ -251,6 +278,76 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         transform: translateY(0);
       }
 
+      /* Bookmark Ribbon */
+      .bookmark-ribbon {
+        position: absolute;
+        top: 0;
+        left: 36px;
+        width: 24px;
+        height: 38px;
+        background: #ff4757;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 3px;
+        font-size: 8px;
+        font-weight: 800;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+        z-index: 2;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 80%, 0% 100%);
+      }
+      .bookmark-ribbon .material-icons {
+        font-size: 10px;
+        height: 10px;
+        width: 10px;
+      }
+      .ribbon-page {
+        margin-top: 1px;
+        line-height: 1;
+        font-size: 8px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Progress Bar on Cover */
+      .cover-progress-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.18);
+        z-index: 2;
+      }
+      .cover-progress-bar span {
+        display: block;
+        height: 100%;
+        background: #00d2d3;
+        box-shadow: 0 0 4px #00d2d3;
+        transition: width var(--dur) var(--ease);
+      }
+
+      /* Progress Section in Details */
+      .detail-progress-section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .progress-track {
+        height: 6px;
+        background: var(--color-border);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-primary), #00d2d3);
+        border-radius: var(--radius-full);
+        transition: width var(--dur) var(--ease);
+      }
+
       /* Detay paneli */
       .details-panel {
         max-height: 0;
@@ -442,6 +539,12 @@ export class BookCardComponent {
   readonly bashHarfler = computed(() => {
     const kelimeler = this.kitap().ad.trim().split(/\s+/).filter(Boolean);
     return kelimeler.slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
+  });
+
+  readonly okumaYuzdesi = computed(() => {
+    const k = this.kitap();
+    if (!k.sayfaSayisi || !k.kalinanSayfa) return 0;
+    return Math.min(100, Math.round((k.kalinanSayfa / k.sayfaSayisi) * 100));
   });
 
   detayAc(): void {

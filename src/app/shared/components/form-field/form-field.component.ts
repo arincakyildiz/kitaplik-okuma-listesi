@@ -154,6 +154,7 @@ export class FormFieldComponent {
     if (errors['number']) return this.i18n.t('valid.min');
     if (errors['futureDate']) return this.i18n.t('valid.futureDate');
     if (errors['date']) return this.i18n.t('valid.date');
+    if (errors['kalinanBuyuk']) return this.i18n.t('valid.kalinanBuyuk');
     return this.i18n.t('valid.required');
   });
 }
