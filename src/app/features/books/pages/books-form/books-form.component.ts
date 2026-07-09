@@ -77,7 +77,28 @@ export class BooksFormComponent implements CanComponentDeactivate {
   }
 
   alintiSil(index: number): void {
-    this.alintilar.update((list) => list.filter((_, i) => i !== index));
+    const alinti = this.alintilar()[index];
+    if (!alinti) return;
+    const metinKisa =
+      alinti.metin.length > 80 ? alinti.metin.slice(0, 80).trimEnd() + '…' : alinti.metin;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: this.i18n.t('confirm.deleteQuoteTitle'),
+        message: this.i18n.t('confirm.deleteQuoteText', { text: metinKisa }),
+        confirmText: this.i18n.t('confirm.delete'),
+        cancelText: this.i18n.t('confirm.cancel'),
+        danger: true,
+      },
+      panelClass: 'app-dialog',
+      autoFocus: false,
+      maxWidth: '96vw',
+    });
+
+    ref.afterClosed().subscribe((onay) => {
+      if (onay) {
+        this.alintilar.update((list) => list.filter((_, i) => i !== index));
+      }
+    });
   }
 
   private kaydedildi = false;

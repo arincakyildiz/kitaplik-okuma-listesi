@@ -126,6 +126,8 @@ export const CEVIRILER: Ceviriler = {
 
     'confirm.deleteTitle': 'Kitabı sil',
     'confirm.deleteText': '“{title}” kitabını silmek istediğine emin misin? Bu işlem geri alınamaz.',
+    'confirm.deleteQuoteTitle': 'Alıntıyı sil',
+    'confirm.deleteQuoteText': '“{text}” alıntısını silmek istediğine emin misin? Bu işlem geri alınamaz.',
     'confirm.cancel': 'İptal',
     'confirm.delete': 'Sil',
     'confirm.yes': 'Evet',
@@ -329,6 +331,8 @@ export const CEVIRILER: Ceviriler = {
 
     'confirm.deleteTitle': 'Delete book',
     'confirm.deleteText': 'Are you sure you want to delete “{title}”? This action cannot be undone.',
+    'confirm.deleteQuoteTitle': 'Delete quote',
+    'confirm.deleteQuoteText': 'Are you sure you want to delete the quote “{text}”? This action cannot be undone.',
     'confirm.cancel': 'Cancel',
     'confirm.delete': 'Delete',
     'confirm.yes': 'Yes',
