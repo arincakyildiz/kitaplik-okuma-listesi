@@ -49,6 +49,13 @@ import { DESTEKLENEN_DILLER, Dil } from '../../../core/models/language.model';
       .chev { margin-left: 2px; color: var(--color-text-subtle); }
       .name { margin-left: 4px; }
       .check { margin-left: auto; color: var(--color-primary); }
+
+      /* Dar ekranlarda bayrak emojisi düzensiz/taşmış görünebiliyor;
+         navbar'da yer açmak için sadece dil kodunu (TR/EN) göster. */
+      @media (max-width: 620px) {
+        .lang-btn .flag { display: none; }
+        .lang-btn { padding: 0 10px !important; }
+      }
     `,
   ],
 })
