@@ -49,6 +49,7 @@ export const CEVIRILER: Ceviriler = {
     'pagination.label': 'Sayfalama',
     'pagination.prev': 'Önceki sayfa',
     'pagination.next': 'Sonraki sayfa',
+    'pagination.perPage': 'Sayfa başına',
 
     'empty.title': 'Henüz kitap eklenmemiş.',
     'empty.subtitle': 'İlk kitabını ekleyerek kişisel okuma listeni oluşturmaya başla.',
@@ -251,6 +252,7 @@ export const CEVIRILER: Ceviriler = {
     'pagination.label': 'Pagination',
     'pagination.prev': 'Previous page',
     'pagination.next': 'Next page',
+    'pagination.perPage': 'Per page',
 
     'empty.title': 'No books added yet.',
     'empty.subtitle': 'Start building your personal reading list by adding your first book.',

@@ -319,11 +319,26 @@
     } @else {
       <div class="results-meta">
         <span>{{ (gorunenKitaplar().length === 1 ? 'results.one' : 'results.many') | translate: { count: gorunenKitaplar().length } }}</span>
-        @if (filtreAktif()) {
-          <button class="reset" (click)="filtreTemizle()">
-            <mat-icon>close</mat-icon> {{ 'results.clear' | translate }}
-          </button>
-        }
+        <div class="results-meta-right">
+          <label class="page-size">
+            <span class="page-size-label">{{ 'pagination.perPage' | translate }}</span>
+            <select
+              class="page-size-select"
+              [value]="sayfaBoyutu()"
+              (change)="sayfaBoyutuSec(+$any($event.target).value)"
+              [attr.aria-label]="'pagination.perPage' | translate"
+            >
+              @for (n of sayfaBoyutuSecenekleri(); track n) {
+                <option [value]="n">{{ n }}</option>
+              }
+            </select>
+          </label>
+          @if (filtreAktif()) {
+            <button class="reset" (click)="filtreTemizle()">
+              <mat-icon>close</mat-icon> {{ 'results.clear' | translate }}
+            </button>
+          }
+        </div>
       </div>
 
       @if (gorunum() === 'kart') {

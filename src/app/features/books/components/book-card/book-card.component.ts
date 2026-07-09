@@ -405,7 +405,9 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         transition: max-height 380ms cubic-bezier(0.4, 0, 0.2, 1);
       }
       .details-panel.open {
-        max-height: 800px;
+        /* İçerik (uzun not + çok sayıda alıntı/günlük kaydı) 800px'i aşabildiğinden
+           gerçek metni kesmemesi için animasyon üst sınırı bolca yüksek tutulur. */
+        max-height: 3000px;
         border-bottom: 1px solid var(--color-border);
       }
       .detail-time-hint {

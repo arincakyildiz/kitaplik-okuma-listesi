@@ -251,18 +251,44 @@ export class BooksListComponent {
   );
 
   // --- Sayfalama -----------------------------------------------------------
-  private readonly SAYFA_BOYUTU = 12;
+  /** Kart ve tablo görünümü farklı sayfa başına kayıt seçeneklerine sahiptir. */
+  readonly KART_SAYFA_BOYUTLARI = [12, 24, 36, 48] as const;
+  readonly TABLO_SAYFA_BOYUTLARI = [5, 20, 50, 80, 100] as const;
+
+  private readonly kartSayfaBoyutu = signal<number>(this.KART_SAYFA_BOYUTLARI[0]);
+  private readonly tabloSayfaBoyutu = signal<number>(this.TABLO_SAYFA_BOYUTLARI[1]);
+
+  /** Aktif görünüme göre geçerli sayfa boyutu. */
+  readonly sayfaBoyutu = computed(() =>
+    this.gorunum() === 'kart' ? this.kartSayfaBoyutu() : this.tabloSayfaBoyutu(),
+  );
+
+  /** Aktif görünümün sayfa boyutu seçenekleri. */
+  readonly sayfaBoyutuSecenekleri = computed<readonly number[]>(() =>
+    this.gorunum() === 'kart' ? this.KART_SAYFA_BOYUTLARI : this.TABLO_SAYFA_BOYUTLARI,
+  );
+
   readonly sayfa = signal(1);
 
   readonly toplamSayfa = computed(() =>
-    Math.max(1, Math.ceil(this.gorunenKitaplar().length / this.SAYFA_BOYUTU)),
+    Math.max(1, Math.ceil(this.gorunenKitaplar().length / this.sayfaBoyutu())),
   );
 
   /** O anki sayfaya düşen kitaplar (grid ve tablo bunu kullanır). */
   readonly sayfaliKitaplar = computed<Kitap[]>(() => {
-    const bas = (this.sayfa() - 1) * this.SAYFA_BOYUTU;
-    return this.gorunenKitaplar().slice(bas, bas + this.SAYFA_BOYUTU);
+    const boyut = this.sayfaBoyutu();
+    const bas = (this.sayfa() - 1) * boyut;
+    return this.gorunenKitaplar().slice(bas, bas + boyut);
   });
+
+  /** Sayfa başına gösterilecek kayıt sayısını değiştirir (görünüme özel). */
+  sayfaBoyutuSec(n: number): void {
+    if (this.gorunum() === 'kart') {
+      this.kartSayfaBoyutu.set(n);
+    } else {
+      this.tabloSayfaBoyutu.set(n);
+    }
+  }
 
   /** Gösterilecek sayfa numaraları; çok sayfa varsa "…" ile kısaltır. */
   readonly sayfaNumaralari = computed<(number | '...')[]>(() => {
@@ -284,12 +310,13 @@ export class BooksListComponent {
   });
 
   constructor() {
-    // Arama / filtre / sıralama değişince ilk sayfaya dön.
+    // Arama / filtre / sıralama / görünüm / sayfa boyutu değişince ilk sayfaya dön.
     effect(() => {
       this.arama();
       this.durumFiltresi();
       this.turFiltresi();
       this.siralama();
+      this.sayfaBoyutu();
       this.sayfa.set(1);
     });
   }
