@@ -46,13 +46,14 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         <div class="cover-status">
           <app-status-badge [durum]="kitap().durum" />
         </div>
-        <!-- Hover/detay chip -->
-        <div class="cover-overlay">
-          <span class="details-chip">
-            <span class="material-icons">{{ acik() ? 'expand_less' : 'info_outline' }}</span>
-            {{ acik() ? ('card.hideDetails' | translate) : ('card.showDetails' | translate) }}
-          </span>
-        </div>
+        <!-- Detay ipucu — kapağın sağ alt köşesinde her zaman görünür -->
+        <span
+          class="details-chip"
+          [matTooltip]="acik() ? ('card.hideDetails' | translate) : ('card.showDetails' | translate)"
+          [attr.aria-label]="acik() ? ('card.hideDetails' | translate) : ('card.showDetails' | translate)"
+        >
+          <span class="material-icons">{{ acik() ? 'expand_less' : 'info_outline' }}</span>
+        </span>
         @if (kitap().durum === 'okunuyor' && kitap().sayfaSayisi && kitap().kalinanSayfa) {
           <div class="cover-progress-bar">
             <span [style.width.%]="okumaYuzdesi()"></span>
@@ -284,50 +285,31 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         backdrop-filter: blur(4px);
       }
 
-      /* Hover overlay */
-      .cover-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0);
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding-bottom: 12px;
-        transition: background 220ms var(--ease);
-        pointer-events: none;
-      }
-      .cover:hover .cover-overlay {
-        background: rgba(0, 0, 0, 0.28);
-      }
-      .card.expanded .cover-overlay {
-        background: rgba(0, 0, 0, 0.18);
-      }
+      /* Detay ipucu — kapağın sağ alt köşesinde küçük, ikon-only bir yuvarlak.
+         Dokunmatik cihazlarda hover tetiklenmediği için her zaman görünür
+         olmalı; aksi halde kullanıcı kapağın tıklanabilir olduğunu fark edemez. */
       .details-chip {
-        display: inline-flex;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        display: flex;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
         background: rgba(255, 255, 255, 0.94);
         color: #1a1a2e;
-        font-size: 11.5px;
-        font-weight: 700;
-        padding: 5px 13px;
-        border-radius: var(--radius-full);
+        border-radius: 50%;
         backdrop-filter: blur(8px);
-        box-shadow: 0 2px 12px rgba(0,0,0,0.22);
-        transform: translateY(0);
-        /* Dokunmatik cihazlarda hover tetiklenmediği için ipucu her zaman
-           görünür olmalı; aksi halde kullanıcı kapağın tıklanabilir
-           olduğunu ve detayları açtığını hiç fark edemez. */
-        opacity: 0.92;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+        opacity: 0.9;
         transition: opacity 220ms var(--ease), transform 220ms var(--ease);
-        white-space: nowrap;
-        letter-spacing: 0.01em;
       }
-      .details-chip .material-icons { font-size: 14px; }
+      .details-chip .material-icons { font-size: 15px; }
       .cover:hover .details-chip,
       .card.expanded .details-chip {
         opacity: 1;
-        transform: translateY(-2px);
+        transform: scale(1.08);
       }
 
       /* Bookmark Ribbon */
