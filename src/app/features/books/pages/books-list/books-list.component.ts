@@ -252,7 +252,7 @@ export class BooksListComponent {
 
   // --- Sayfalama -----------------------------------------------------------
   /** Kart ve tablo görünümü farklı sayfa başına kayıt seçeneklerine sahiptir. */
-  readonly KART_SAYFA_BOYUTLARI = [12, 24, 36, 48] as const;
+  readonly KART_SAYFA_BOYUTLARI = [12, 24, 36, 48, 60] as const;
   readonly TABLO_SAYFA_BOYUTLARI = [5, 20, 50, 80, 100] as const;
 
   private readonly kartSayfaBoyutu = signal<number>(this.KART_SAYFA_BOYUTLARI[0]);
