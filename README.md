@@ -186,13 +186,14 @@ Veriler tarayıcının `localStorage` alanında saklanır ve sayfa yenilendiğin
 
 - Tam CRUD akışı (ekle / listele / düzenle / sil)
 - Kart **ve** tablo görünümü arasında geçiş
-- **Sayfalama** — kitap listesi sayfa başına 12 kitap gösterir, akıllı sayfa numaraları (elips ile kısaltma)
+- **Sayfalama** — akıllı sayfa numaraları (elips ile kısaltma); sayfa başına gösterilecek kayıt sayısı seçilebilir ve görünüme özeldir: kart görünümünde 12/24/36/48/60, tablo görünümünde 5/20/50/80/100
 - **Kitap kartı detay paneli** — kart kapağına tıklayınca animasyonlu slide-down panel açılır (tür, sayfa, puan, başlama tarihi, notlar, alıntılar, okuma günlüğü)
 - **Okuma ilerlemesi** — "okunuyor" durumundaki kitaplarda kalınan sayfa takibi, ilerleme çubuğu ve tahmini kalan okuma süresi
-- **Alıntılar** — kitaba birden fazla alıntı (sayfa numarasıyla) eklenebilir, kart detayında listelenir
+- **Alıntılar** — kitaba birden fazla alıntı (sayfa numarasıyla) eklenebilir, kart detayında listelenir; silme işlemi diğer geri alınamaz işlemler gibi onay diyaloglu
 - **Okuma günlüğü (timeline)** — kitap oluşturma, durum değişikliği, sayfa güncellemesi ve tamamlanma anları otomatik kaydedilir
 - **Dashboard / istatistikler** — yıllık okuma hedefi ve ilerleme yüzdesi, toplam okunan sayfa, ortalama puan, favori tür, ortalama sayfa sayısı, "günün alıntısı"
-- **Yedekleme ve veri yönetimi** — kütüphaneyi JSON olarak dışa aktarma, JSON yedeğini içe aktarma, Excel uyumlu CSV (UTF-8 BOM) olarak dışa aktarma, örnek verileri yükleme ve kütüphaneyi tamamen temizleme (onay diyaloglu)
+- **Excel'e aktarma** — kütüphane Excel uyumlu CSV (UTF-8 BOM) olarak, navbar'daki kendi ikon butonuyla (yedekleme menüsünden ayrı) tek tıkla indirilir
+- **Yedekleme ve veri yönetimi** — kütüphaneyi JSON olarak dışa aktarma, JSON yedeğini içe aktarma, örnek verileri yükleme ve kütüphaneyi tamamen temizleme (onay diyaloglu)
 - **Notlar karakter sayacı** — form sayfasında not alanında anlık karakter sayısı gösterimi (500 karakter limiti)
 - Ad / yazar / türe göre arama, **tür ve okuma durumuna göre filtre**, çoklu sıralama (tarih / puan / ad / yazar / sayfa)
 - 1–5 yıldız puanlama ve **başlama tarihi** (gelecek tarih engellenir)
