@@ -361,7 +361,13 @@
     white-space: nowrap;
     max-width: 90px;
   }
-  .stats { width: 100%; overflow-x: auto; }
+  .stats {
+    width: 100%;
+    overflow-x: auto;
+    /* sağ kenarda daha fazla kart olduğunu ima eden solma efekti */
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  }
   .hero-text h1 { font-size: 24px; }
 }
 
