@@ -469,6 +469,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         font-style: italic;
         border-left: none;
         padding-left: 0;
+        overflow-wrap: anywhere;
       }
       .quote-body .quote-page {
         font-size: 10px;
@@ -589,6 +590,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         line-height: 1.55;
         color: var(--color-text-muted);
         font-style: italic;
+        overflow-wrap: anywhere;
       }
 
       /* Body */
@@ -646,6 +648,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         font-style: italic;
         border-left: 2px solid var(--color-border);
         padding-left: var(--space-3);
+        overflow-wrap: anywhere;
       }
       .actions {
         display: flex;
