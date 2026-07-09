@@ -314,8 +314,11 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
         border-radius: var(--radius-full);
         backdrop-filter: blur(8px);
         box-shadow: 0 2px 12px rgba(0,0,0,0.22);
-        transform: translateY(10px);
-        opacity: 0;
+        transform: translateY(0);
+        /* Dokunmatik cihazlarda hover tetiklenmediği için ipucu her zaman
+           görünür olmalı; aksi halde kullanıcı kapağın tıklanabilir
+           olduğunu ve detayları açtığını hiç fark edemez. */
+        opacity: 0.92;
         transition: opacity 220ms var(--ease), transform 220ms var(--ease);
         white-space: nowrap;
         letter-spacing: 0.01em;
@@ -324,7 +327,7 @@ import { TruncatePipe } from '../../../../shared/pipes/truncate.pipe';
       .cover:hover .details-chip,
       .card.expanded .details-chip {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(-2px);
       }
 
       /* Bookmark Ribbon */
