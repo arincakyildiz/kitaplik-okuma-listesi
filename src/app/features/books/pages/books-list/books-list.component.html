@@ -13,14 +13,13 @@
       <div class="nav-actions">
         <app-theme-toggle />
         <app-language-switcher />
+        <button mat-icon-button (click)="veriDisaAktarExcel()" [matTooltip]="'toolbar.exportExcel' | translate">
+          <mat-icon>table_view</mat-icon>
+        </button>
         <button mat-icon-button [matMenuTriggerFor]="backupMenu" [matTooltip]="'toolbar.backup' | translate">
           <mat-icon>settings_backup_restore</mat-icon>
         </button>
         <mat-menu #backupMenu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="veriDisaAktarExcel()">
-            <mat-icon>table_view</mat-icon>
-            <span>{{ 'toolbar.exportExcel' | translate }}</span>
-          </button>
           <button mat-menu-item (click)="veriDisaAktar()">
             <mat-icon>download</mat-icon>
             <span>{{ 'toolbar.export' | translate }}</span>
